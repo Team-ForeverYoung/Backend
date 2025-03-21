@@ -5,25 +5,25 @@ import org.springframework.stereotype.Service;
 import com.java.backend.domain.example.dto.UserInfoResponseDto;
 import com.java.backend.domain.example.dto.UserRegisterRequestDto;
 import com.java.backend.domain.example.entity.User;
-import com.java.backend.domain.example.repository.TestRepository;
+import com.java.backend.domain.example.repository.UserRepository;
 
 @Service
 public class TestServiceImpl implements TestService{
-	private final TestRepository testRepository;
+	private final UserRepository userRepository;
 
-	public TestServiceImpl(TestRepository testRepository) {
-		this.testRepository = testRepository;
+	public TestServiceImpl(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 
 	@Override
 	public void registrationUser(UserRegisterRequestDto userRegisterRequestDto) {
 		User newUser = createUser(userRegisterRequestDto);
-		testRepository.save(newUser);
+		userRepository.save(newUser);
 	}
 
 	@Override
 	public UserInfoResponseDto showUserInformation(Long productId) {
-		return testRepository.findUserById(productId);
+		return userRepository.findUserById(productId);
 	}
 
 	private User createUser(UserRegisterRequestDto userRegisterRequestDto){

@@ -9,7 +9,7 @@ import com.java.backend.domain.example.dto.UserInfoResponseDto;
 import com.java.backend.domain.example.entity.User;
 
 @Repository
-public interface TestRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User,Long> {
 	@Query(" SELECT new com.java.backend.domain.example.dto.UserInfoResponseDto(user.name,user.age) "
 		+ "FROM User user "
 		+ "WHERE user.id = :userId")
