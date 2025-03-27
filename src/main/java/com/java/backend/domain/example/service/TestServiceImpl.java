@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.java.backend.domain.example.dto.UserInfoResponseDto;
 import com.java.backend.domain.example.dto.UserRegisterRequestDto;
-import com.java.backend.domain.example.entity.User;
+import com.java.backend.domain.example.entity.TestUser;
 import com.java.backend.domain.example.repository.UserRepository;
 
 @Service
@@ -17,7 +17,7 @@ public class TestServiceImpl implements TestService{
 
 	@Override
 	public void registrationUser(UserRegisterRequestDto userRegisterRequestDto) {
-		User newUser = createUser(userRegisterRequestDto);
+		TestUser newUser = createUser(userRegisterRequestDto);
 		userRepository.save(newUser);
 	}
 
@@ -26,8 +26,8 @@ public class TestServiceImpl implements TestService{
 		return userRepository.findUserById(productId);
 	}
 
-	private User createUser(UserRegisterRequestDto userRegisterRequestDto){
-		return User.builder().age(userRegisterRequestDto.getAge()).name(userRegisterRequestDto.getName()).build();
+	private TestUser createUser(UserRegisterRequestDto userRegisterRequestDto){
+		return TestUser.builder().age(userRegisterRequestDto.getAge()).name(userRegisterRequestDto.getName()).build();
 	}
 }
 

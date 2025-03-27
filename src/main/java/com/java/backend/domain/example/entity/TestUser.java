@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Getter
-@Table(name = "users")
-public class User {
+@Table(name = "testusers")
+public class TestUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -27,7 +26,7 @@ public class User {
 	private Integer age;
 
 	@Builder
-	public User(Long id, String name, Integer age) {
+	public TestUser(Long id, String name, Integer age) {
 		this.id = id;
 		this.name = name;
 		this.age = age;
