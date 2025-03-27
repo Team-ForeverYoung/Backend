@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
+
 @Entity
 @Table(name = "seats")
 public class Seat {
@@ -24,4 +26,10 @@ public class Seat {
 	@ManyToOne
 	@JoinColumn(name = "theater_id", nullable = false)
 	private Theater theater;
+	@Builder
+	public Seat(Integer colume, Integer row, Theater theater) {
+		this.colume = colume;
+		this.row = row;
+		this.theater = theater;
+	}
 }

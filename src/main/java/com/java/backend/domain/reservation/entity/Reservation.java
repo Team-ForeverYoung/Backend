@@ -13,6 +13,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
+
 @Entity
 @Table(name = "reservations")
 public class Reservation extends BaseEntity {
@@ -28,5 +30,13 @@ public class Reservation extends BaseEntity {
 	@JoinColumn(name = "seat_id", nullable = false)
 	private Seat seat;
 
+	@Builder
+	public Reservation(User user, Seat seat) {
+		this.user = user;
+		this.seat = seat;
+	}
 
+	public Reservation(Long id) {
+		this.id = id;
+	}
 }

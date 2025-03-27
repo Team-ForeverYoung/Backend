@@ -13,7 +13,6 @@ import com.java.backend.domain.example.dto.UserInfoResponseDto;
 import com.java.backend.domain.example.dto.UserRegisterRequestDto;
 import com.java.backend.domain.example.service.TestService;
 import com.java.backend.global.response.RestApiResponse;
-
 @RestController
 @RequestMapping("api/v1/test")
 public class TestController {
@@ -24,7 +23,7 @@ public class TestController {
 		this.testService = testService;
 	}
 
-	@GetMapping("/test")
+	@GetMapping()
 	public String test(){
 		return "test";
 	}

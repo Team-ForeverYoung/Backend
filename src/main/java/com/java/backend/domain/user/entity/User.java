@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -21,5 +23,10 @@ public class User {
 
 	@Column
 	private String passWord;
-
+	@Builder
+	public User(String name, String email, String passWord) {
+		this.name = name;
+		this.email = email;
+		this.passWord = passWord;
+	}
 }
