@@ -1,11 +1,9 @@
-package com.java.backend.domain.reservation.entity;
+package com.java.backend.domain.order.entity;
 
-import org.springframework.lang.Nullable;
-
-import com.java.backend.domain.theater.entity.Seat;
 import com.java.backend.domain.user.entity.User;
 import com.java.backend.global.entity.BaseEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,27 +14,38 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 
 @Entity
-@Table(name = "reservations")
-public class Reservation extends BaseEntity {
+@Table(name = "orders")
+public class Order extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "user_id")
 	private User user;
 
-	@ManyToOne
-	@JoinColumn(name = "seat_id", nullable = false)
-	private Seat seat;
+	@Column
+	private OrderState orderState;
 
-	@Builder
-	public Reservation(User user, Seat seat) {
-		this.user = user;
-		this.seat = seat;
+	public Order() {
+
 	}
 
-	public Reservation(Long id) {
-		this.id = id;
+	public Long getId() {
+		return id;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public OrderState getOrderState() {
+		return orderState;
+	}
+
+	@Builder
+	public Order(User user, OrderState orderState) {
+		this.user = user;
+		this.orderState = orderState;
 	}
 }
