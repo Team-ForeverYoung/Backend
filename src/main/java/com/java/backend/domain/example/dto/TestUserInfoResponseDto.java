@@ -5,11 +5,11 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class UserInfoResponseDto {
+public class TestUserInfoResponseDto {
 	private String name;
 	private Integer age;
 
-	public UserInfoResponseDto(String name, Integer age) {
+	public TestUserInfoResponseDto(String name, Integer age) {
 		this.name = name;
 		this.age = age;
 	}
