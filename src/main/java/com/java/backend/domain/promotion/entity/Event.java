@@ -19,10 +19,13 @@ public class Event {
 	private Long id;
 
 	@Column
-	private Long eventName;
+	private String eventName;
 
 	@Column
 	private LocalDate expiredTime;
+
+	@Column
+	private Integer amount;
 	@ManyToOne
 	@JoinColumn(name = "coupon_id")
 	private Coupon coupon;
@@ -31,14 +34,23 @@ public class Event {
 	public Event() {
 	}
 
-	public Event(Long eventName, LocalDate expiredTime, Coupon coupon) {
+	public Event(String eventName, LocalDate expiredTime, Integer amount, Coupon coupon) {
 		this.eventName = eventName;
 		this.expiredTime = expiredTime;
+		this.amount = amount;
 		this.coupon = coupon;
 	}
 
+	public void subtractAmount(){
+		Integer amount = this.amount - 1 ;
+		this.setAmount(amount);
+	}
 
-	public Long getEventName() {
+	private void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+
+	public String getEventName() {
 		return eventName;
 	}
 
@@ -52,5 +64,9 @@ public class Event {
 
 	public Long getId() {
 		return id;
+	}
+
+	public Integer getAmount() {
+		return amount;
 	}
 }

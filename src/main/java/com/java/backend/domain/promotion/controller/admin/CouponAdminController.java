@@ -2,6 +2,7 @@ package com.java.backend.domain.promotion.controller.admin;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,7 @@ public class CouponAdminController {
 		this.couponService = couponService;
 	}
 	@PostMapping
-	public ResponseEntity<RestApiResponse> registerAdminCoupon(CouponCreateRequestDto dto){
+	public ResponseEntity<RestApiResponse> registerAdminCoupon(@RequestBody CouponCreateRequestDto dto){
 		couponService.createCoupon(dto);
 		RestApiResponse restApiResponse = new RestApiResponse(PromotionCode.COUPON_CREATED_SUCCESS);
 		return ResponseEntity.ok(restApiResponse);
