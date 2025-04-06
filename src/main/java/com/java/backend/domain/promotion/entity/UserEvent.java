@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 
 @Entity
 @Table(name = "userevents")
@@ -47,7 +48,7 @@ public class UserEvent {
 
 	public UserEvent() {
 	}
-
+	@Builder
 	public UserEvent(Coupon coupon, Event event, User user) {
 		this.coupon = coupon;
 		this.event = event;
