@@ -1,6 +1,6 @@
 package com.java.backend.domain.example.dto;
 
-public class UserRegisterRequestDto {
+public class TestUserRegisterRequestDto {
 	private final String name;
 	private final Integer age;
 
@@ -12,7 +12,7 @@ public class UserRegisterRequestDto {
 		return age;
 	}
 
-	public UserRegisterRequestDto(String name, Integer age) {
+	public TestUserRegisterRequestDto(String name, Integer age) {
 		this.name = name;
 		this.age = age;
 	}

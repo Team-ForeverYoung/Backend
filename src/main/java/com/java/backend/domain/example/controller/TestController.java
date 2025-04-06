@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.java.backend.domain.example.code.SuccessCode;
-import com.java.backend.domain.example.dto.UserInfoResponseDto;
-import com.java.backend.domain.example.dto.UserRegisterRequestDto;
+import com.java.backend.domain.example.dto.TestUserInfoResponseDto;
+import com.java.backend.domain.example.dto.TestUserRegisterRequestDto;
 import com.java.backend.domain.example.service.TestService;
 import com.java.backend.global.response.RestApiResponse;
 @RestController
@@ -29,14 +29,14 @@ public class TestController {
 	}
 
 	@PostMapping
-	public ResponseEntity<RestApiResponse> test2(@RequestBody UserRegisterRequestDto userRegisterRequestDto){
-		testService.registrationUser(userRegisterRequestDto);
+	public ResponseEntity<RestApiResponse> test2(@RequestBody TestUserRegisterRequestDto testUserRegisterRequestDto){
+		testService.registrationUser(testUserRegisterRequestDto);
 		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/{userId}")
 	public ResponseEntity<RestApiResponse> test3(@PathVariable("userId") Long userId){
-		UserInfoResponseDto response = testService.showUserInformation(userId);
+		TestUserInfoResponseDto response = testService.showUserInformation(userId);
 		RestApiResponse data = new RestApiResponse(SuccessCode.USER_INFO_FOUND_OK,response);
 		return ResponseEntity.ok(data);
 	}

@@ -1,7 +1,10 @@
-package com.java.backend.domain.coupon.entity;
+package com.java.backend.domain.promotion.entity;
+
+import java.time.LocalDate;
 
 import com.java.backend.domain.user.entity.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,16 +21,18 @@ public class Coupon {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	@Column
 	private String name;
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	@Column
+	private String benefit;
 
-	public Coupon(Long id, String name, User user) {
-		this.id = id;
+	@Column
+	private LocalDate expiredTime;
+
+	public Coupon(String name, String benefit, LocalDate expiredTime) {
 		this.name = name;
-		this.user = user;
+		this.benefit = benefit;
+		this.expiredTime = expiredTime;
 	}
 
 	public Long getId() {
@@ -38,7 +43,9 @@ public class Coupon {
 		return name;
 	}
 
-	public User getUser() {
-		return user;
+	public String getBenefit() {
+		return benefit;
 	}
+
+
 }

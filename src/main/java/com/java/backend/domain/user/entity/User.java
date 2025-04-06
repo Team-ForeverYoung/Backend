@@ -12,7 +12,7 @@ import lombok.Builder;
 
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity {
+public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -24,7 +24,7 @@ public class User extends BaseEntity {
 	private String email;
 
 	@Column
-	private String passWord;
+	private String password;
 
 	@Column
 	private Integer point;
@@ -36,7 +36,7 @@ public class User extends BaseEntity {
 	public User(String name, String email, String passWord, Integer point, String country) {
 		this.name = name;
 		this.email = email;
-		this.passWord = passWord;
+		this.password = passWord;
 		this.point = point;
 		this.country = country;
 	}
@@ -50,7 +50,7 @@ public class User extends BaseEntity {
 	}
 
 	public String getPassWord() {
-		return passWord;
+		return password;
 	}
 
 	public Integer getPoint() {

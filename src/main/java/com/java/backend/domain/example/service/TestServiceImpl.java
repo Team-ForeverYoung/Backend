@@ -2,32 +2,32 @@ package com.java.backend.domain.example.service;
 
 import org.springframework.stereotype.Service;
 
-import com.java.backend.domain.example.dto.UserInfoResponseDto;
-import com.java.backend.domain.example.dto.UserRegisterRequestDto;
+import com.java.backend.domain.example.dto.TestUserInfoResponseDto;
+import com.java.backend.domain.example.dto.TestUserRegisterRequestDto;
 import com.java.backend.domain.example.entity.TestUser;
-import com.java.backend.domain.example.repository.UserRepository;
+import com.java.backend.domain.example.repository.TestUserRepository;
 
 @Service
 public class TestServiceImpl implements TestService{
-	private final UserRepository userRepository;
+	private final TestUserRepository testUserRepository;
 
-	public TestServiceImpl(UserRepository userRepository) {
-		this.userRepository = userRepository;
+	public TestServiceImpl(TestUserRepository testUserRepository) {
+		this.testUserRepository = testUserRepository;
 	}
 
 	@Override
-	public void registrationUser(UserRegisterRequestDto userRegisterRequestDto) {
-		TestUser newUser = createUser(userRegisterRequestDto);
-		userRepository.save(newUser);
+	public void registrationUser(TestUserRegisterRequestDto testUserRegisterRequestDto) {
+		TestUser newUser = createUser(testUserRegisterRequestDto);
+		testUserRepository.save(newUser);
 	}
 
 	@Override
-	public UserInfoResponseDto showUserInformation(Long productId) {
-		return userRepository.findUserById(productId);
+	public TestUserInfoResponseDto showUserInformation(Long productId) {
+		return testUserRepository.findUserById(productId);
 	}
 
-	private TestUser createUser(UserRegisterRequestDto userRegisterRequestDto){
-		return TestUser.builder().age(userRegisterRequestDto.getAge()).name(userRegisterRequestDto.getName()).build();
+	private TestUser createUser(TestUserRegisterRequestDto testUserRegisterRequestDto){
+		return TestUser.builder().age(testUserRegisterRequestDto.getAge()).name(testUserRegisterRequestDto.getName()).build();
 	}
 }
 
