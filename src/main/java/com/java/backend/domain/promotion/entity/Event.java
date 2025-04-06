@@ -2,6 +2,12 @@ package com.java.backend.domain.promotion.entity;
 
 import java.time.LocalDate;
 
+import com.java.backend.domain.promotion.code.PromotionCode;
+import com.java.backend.domain.promotion.code.PromotionErrorCode;
+import com.java.backend.domain.promotion.exception.EventException;
+import com.java.backend.global.code.ResponseApiCode;
+import com.java.backend.global.exception.ExceptionMetaData;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,6 +48,10 @@ public class Event {
 	}
 
 	public void subtractAmount(){
+		if(amount <= 0){
+			ExceptionMetaData exceptionMetaData = createExceptionMetaData(PromotionErrorCode.THIS_EVENT_IS_SOLD_OUT);
+			throw new EventException.eventSoldedOutException(exceptionMetaData);
+		}
 		Integer amount = this.amount - 1 ;
 		this.setAmount(amount);
 	}
@@ -49,6 +59,9 @@ public class Event {
 	private void setAmount(Integer amount) {
 		this.amount = amount;
 	}
+
+
+
 
 	public String getEventName() {
 		return eventName;
@@ -69,4 +82,13 @@ public class Event {
 	public Integer getAmount() {
 		return amount;
 	}
+
+
+	private ExceptionMetaData createExceptionMetaData(ResponseApiCode responseApiCode){
+		return ExceptionMetaData.builder()
+			.responseApiCode(responseApiCode)
+			.className(this.getClass().getName())
+			.build();
+	}
+
 }
