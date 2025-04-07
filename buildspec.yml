@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing dependencies...
+      - ./gradlew build -x test # 의존성 설치 (테스트 제외)
+  pre_build:
+    commands:
+      - echo Preparing for build...
+  build:
+    commands:
+      - echo Building the project...
+      - ./gradlew clean build -x test # 빌드 (테스트 제외)
+  post_build:
+    commands:
+      - echo Build completed.
+artifacts:
+  files:
+    - build/libs/*.jar # 빌드된 JAR 파일을 아티팩트로 설정
+  discard-paths: yes
+  base-directory: build/libs # 아티팩트의 경로를 지정 (빌드된 JAR 파일이 위치하는 디렉토리)
