@@ -4,7 +4,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.java.backend.domain.promotion.code.PromotionErrorCode;
 import com.java.backend.domain.promotion.entity.Coupon;
+import com.java.backend.domain.promotion.exception.CouponException;
+import com.java.backend.global.exception.ExceptionMetaData;
 
 @Service
 public class CouponRepoService {
@@ -14,15 +17,20 @@ public class CouponRepoService {
 		this.couponRepository = couponRepository;
 	}
 
-	public void registerCoupon(Coupon coupon){
-		couponRepository.save(coupon);
+	public Coupon registerCoupon(Coupon coupon){
+		return couponRepository.save(coupon);
+
 	}
 
 	public Coupon getCoupon(Long couponId){
-		Optional<Coupon> optionalCoupon = couponRepository.findById(couponId);
-		//ToDo: 예외처리
-		Coupon coupon = optionalCoupon.orElseThrow();
-		return coupon;
-		}
+		return couponRepository.findById(couponId)
+			.orElseThrow(() -> new CouponException.couponNotFoundException(
+				ExceptionMetaData.builder()
+					.responseApiCode(PromotionErrorCode.COUPON_NOT_FOUND)
+					.className(this.getClass().getName())
+					.build()
+			));
+	}
+
 	}
 

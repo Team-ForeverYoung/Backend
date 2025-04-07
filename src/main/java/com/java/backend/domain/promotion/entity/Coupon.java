@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -28,7 +29,7 @@ public class Coupon {
 
 	@Column
 	private LocalDate expiredTime;
-
+	@Builder
 	public Coupon(String name, String benefit, LocalDate expiredTime) {
 		this.name = name;
 		this.benefit = benefit;
@@ -45,6 +46,9 @@ public class Coupon {
 
 	public String getBenefit() {
 		return benefit;
+	}
+	public LocalDate getExpiredTime() {
+		return expiredTime;
 	}
 
 

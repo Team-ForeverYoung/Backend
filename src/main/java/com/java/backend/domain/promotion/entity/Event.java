@@ -2,7 +2,6 @@ package com.java.backend.domain.promotion.entity;
 
 import java.time.LocalDate;
 
-import com.java.backend.domain.promotion.code.PromotionCode;
 import com.java.backend.domain.promotion.code.PromotionErrorCode;
 import com.java.backend.domain.promotion.exception.EventException;
 import com.java.backend.global.code.ResponseApiCode;
@@ -16,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 
 @Entity
 @Table(name = "events")
@@ -39,7 +39,7 @@ public class Event {
 
 	public Event() {
 	}
-
+	@Builder
 	public Event(String eventName, LocalDate expiredTime, Integer amount, Coupon coupon) {
 		this.eventName = eventName;
 		this.expiredTime = expiredTime;
@@ -50,7 +50,7 @@ public class Event {
 	public void subtractAmount(){
 		if(amount <= 0){
 			ExceptionMetaData exceptionMetaData = createExceptionMetaData(PromotionErrorCode.THIS_EVENT_IS_SOLD_OUT);
-			throw new EventException.eventSoldedOutException(exceptionMetaData);
+			throw new EventException.eventSoledOutException(exceptionMetaData);
 		}
 		Integer amount = this.amount - 1 ;
 		this.setAmount(amount);
