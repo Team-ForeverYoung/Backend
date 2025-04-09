@@ -5,13 +5,8 @@ phases:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "현재 브랜치:${CODEBUILD_SOURCE_VERSION#refs/heads/}"
-      - |
-        case "${CODEBUILD_SOURCE_VERSION#refs/heads/}" in
-          main)    echo "main 브랜치 빌드 시작" ;;
-          develop) echo "develop 브랜치 빌드 시작" ;;
-          *)       echo "지원되지 않는 브랜치"; exit 1 ;;
-        esac
+      - chmod +x ./scripts/codebuild/branch.sh
+      - ./scripts/codebuild/branch.sh "$CODEBUILD_SOURCE_VERSION"
       - chmod +x ./gradlew
 
   pre_build:
