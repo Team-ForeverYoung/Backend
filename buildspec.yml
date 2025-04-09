@@ -11,8 +11,7 @@ phases:
 
   pre_build:
     commands:
-      - echo "도커 로그인 시도..."
-      - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER_NAME --password-stdin
+      - ./scripts/codebuild/docker_login.sh
 
   build:
     commands:
@@ -21,6 +20,9 @@ phases:
       - ./gradlew test
       - echo "빌드 및 패키징 실행"
       - ./gradlew build --no-daemon
+  post_build:
+    commands:
+      - ./scripts/codebuild/image_build.sh
 
 artifacts:
   files:

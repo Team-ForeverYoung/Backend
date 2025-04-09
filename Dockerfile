@@ -1,6 +1,6 @@
 FROM bellsoft/liberica-openjdk-alpine:17
 
-COPY build/libs/foreverBE.jar /usr/app/foreverBE.jar
+COPY build/libs/*.jar /usr/app/foreverBE.jar
 
 WORKDIR /usr/app
 
