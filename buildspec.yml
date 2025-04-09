@@ -1,5 +1,10 @@
 version: 0.2
-#웹훅 테스트...
+
+env:
+  secrets-manager:
+  DOCKER_USER_NAME: "cj/dev/forever/cicdtest-aZvAJy:DOCKER_USER_NAME"
+  DOCKER_PASSWORD: "cj/dev/forever/cicdtest-aZvAJy:DOCKER_PASSWORD"
+
 phases:
   install:
     runtime-versions:
