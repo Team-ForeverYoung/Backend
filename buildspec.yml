@@ -1,10 +1,5 @@
 version: 0.2
 
-env:
-  secrets-manager:
-    DOCKER_USER_NAME: "arn:aws:secretsmanager:ap-northeast-2:911167924085:secret:cj/dev/forever/cicdtest-aZvAJy:DOCKER_USER_NAME::"
-    DOCKER_PASSWORD: "arn:aws:secretsmanager:ap-northeast-2:911167924085:secret:cj/dev/forever/cicdtest-aZvAJy:DOCKER_PASSWORD::"
-
 phases:
   install:
     runtime-versions:
