@@ -1,18 +1,11 @@
 version: 0.2
 
-env:
-  secrets-manager:
-    DOCKER_USER_NAME: "cj/dev/forever/cicdtest-aZvAJy:DOCKER_USER_NAME"
-    DOCKER_PASSWORD: "cj/dev/forever/cicdtest-aZvAJy:DOCKER_PASSWORD"
-
 phases:
   install:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "환경 변수 테스트: $DOCKER_USER_NAME"
-      - echo "환경 변수 테스트: $DOCKER_PASSWORD"
-      - echo "현재 브랜치: $CODEBUILD_SOURCE_VERSION"
+      - echo "현재 브랜치:$CODEBUILD_SOURCE_VERSION"
       - |
         if [[ "$CODEBUILD_SOURCE_VERSION" == "refs/heads/main" ]]; then
           echo "main 브랜치에 대한 빌드를 시작합니다."
@@ -23,6 +16,11 @@ phases:
           exit 1  
         fi
       - chmod +x ./gradlew
+  pre_build:
+    commands:
+      - echo "도커 로그인 시도..."
+      - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER_NAME --password-stdin || { echo "로그인 실패"; exit 1; }
+
 
   build:
     commands:
