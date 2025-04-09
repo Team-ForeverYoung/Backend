@@ -1,29 +1,31 @@
 version: 0.2
 
+env:
+  secrets-manager:
+    DOCKER_USER_NAME: "cj/dev/forever/cicdtest-aZvAJy:DOCKER_USER_NAME"
+    DOCKER_PASSWORD: "cj/dev/forever/cicdtest-aZvAJy:DOCKER_PASSWORD"
+
 phases:
   install:
     runtime-versions:
-      java: corretto17  
+      java: corretto17
     commands:
-      - echo "현재 브랜치: $CODEBUILD_SOURCE_VERSION"
+      - echo "롼경 변수 테스트 $DOCKER_USER_NAME"
+      - echo "Docker Credential 로드 완료"
+      - echo "현재 브랜치: ${CODEBUILD_SOURCE_VERSION##*/}"
       - |
-        if [[ "$CODEBUILD_SOURCE_VERSION" == "refs/heads/main" ]]; then
-          echo "main 브랜치에 대한 빌드를 시작합니다."
-        elif [[ "$CODEBUILD_SOURCE_VERSION" == "refs/heads/develop" ]]; then
-          echo "develop 브랜치에 대한 빌드를 시작합니다."
-        else
-          echo "main,develop 브랜치가 아닙니다."
-          exit 1  
-        fi
-      - chmod +x ./gradlew 
+        BRANCH="${CODEBUILD_SOURCE_VERSION##*/}"
+        case "$BRANCH" in
+          main|develop) echo "$BRANCH 브랜치 빌드 시작" ;;
+          *) echo "ERROR: 허용되지 않은 브랜치"; exit 1 ;;
+        esac
+      - chmod +x ./gradlew
 
   build:
     commands:
-      - ./gradlew clean  
-      - echo "🧪 테스트 코드 실행"
-      - ./gradlew test  
-      - echo "빌드 및 패키징 실행"
-      - ./gradlew build --no-daemon  
+      - ./gradlew clean
+      - ./gradlew test --no-daemon
+      - ./gradlew build --no-daemon --stacktrace
 
 artifacts:
   files:
