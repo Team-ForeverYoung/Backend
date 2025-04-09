@@ -9,6 +9,8 @@ phases:
   install:
     commands:
       - echo "$DOCKER_USER_NAME"
+      - echo " User: $DOCKER_USER_NAME"
+
 
 
 #version: 0.2
