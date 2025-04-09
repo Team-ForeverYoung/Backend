@@ -1,20 +1,32 @@
 version: 0.2
 
+env:
+  secrets-manager:
+    DOCKER_USER_NAME: "arn:aws:secretsmanager:ap-northeast-2:911167924085:secret:cj/dev/forever/cicdtest-aZvAJy:DOCKER_USER_NAME"
+    DOCKER_PASSWORD: "arn:aws:secretsmanager:ap-northeast-2:911167924085:secret:cj/dev/forever/cicdtest-aZvAJy:DOCKER_PASSWORD"
+
 phases:
   install:
-    runtime-versions:
-      java: corretto17
     commands:
-      - chmod +x ./gradlew
-      - echo "Username: $DOCKER_USER_NAME"
-      - echo "Password: $DOCKER_PASSWORD"
+      - echo "Docker Login: $DOCKER_USER_NAME / $DOCKER_PASSWORD"  # 값 확인용 (운영환경에선 삭제)
 
-  build:
-    commands:
-      - ./gradlew clean
-      - ./gradlew test --no-daemon
-      - ./gradlew build --no-daemon --stacktrace
-
-artifacts:
-  files:
-    - build/libs/*.jar
+#version: 0.2
+#
+#phases:
+#  install:
+#    runtime-versions:
+#      java: corretto17
+#    commands:
+#      - chmod +x ./gradlew
+#      - echo "Username: $DOCKER_USER_NAME"
+#      - echo "Password: $DOCKER_PASSWORD"
+#
+#  build:
+#    commands:
+#      - ./gradlew clean
+#      - ./gradlew test --no-daemon
+#      - ./gradlew build --no-daemon --stacktrace
+#
+#artifacts:
+#  files:
+#    - build/libs/*.jar
