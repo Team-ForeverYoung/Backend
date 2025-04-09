@@ -5,7 +5,7 @@ phases:
     runtime-versions:
       java: corretto17
     commands:
-      - chmod +x ./scripts/codebuild/branch.sh
+      - chmod +x ./scripts/codebuild/*.sh
       - ./scripts/codebuild/branch.sh
       - chmod +x ./gradlew
 
