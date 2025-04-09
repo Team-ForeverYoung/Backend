@@ -10,6 +10,7 @@ phases:
     commands:
       - echo "Docker Login: $DOCKER_USER_NAME / $DOCKER_PASSWORD"  # 값 확인용 (운영환경에선 삭제)
 
+
 #version: 0.2
 #
 #phases:
