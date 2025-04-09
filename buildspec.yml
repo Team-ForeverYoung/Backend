@@ -2,29 +2,35 @@ version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      java: corretto17
     commands:
-      - echo "$DOCKER_USER_NAME"
-      - echo "Username:$DOCKER_USER_NAME"
+      - echo "현재 브랜치:$CODEBUILD_SOURCE_VERSION"
+      - |
+        if [[ "$CODEBUILD_SOURCE_VERSION" == "refs/heads/main" ]]; then
+          echo "main 브랜치에 대한 빌드를 시작합니다."
+        elif [[ "$CODEBUILD_SOURCE_VERSION" == "refs/heads/develop" ]]; then
+          echo "develop 브랜치에 대한 빌드를 시작합니다."
+        else
+          echo "main,develop 브랜치가 아닙니다."
+          exit 1  
+        fi
+      - chmod +x ./gradlew
+  pre_build:
+    commands:
+      - echo "도커 로그인 시도..."
+      - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER_NAME --password-stdin || { echo "로그인 실패"; exit 1; }
 
 
+  build:
+    commands:
+      - ./gradlew clean
+      - echo "🧪 테스트 코드 실행"
+      - ./gradlew test
+      - echo "빌드 및 패키징 실행"
+      - ./gradlew build --no-daemon
 
-#version: 0.2
-#
-#phases:
-#  install:
-#    runtime-versions:
-#      java: corretto17
-#    commands:
-#      - chmod +x ./gradlew
-#      - echo "Username: $DOCKER_USER_NAME"
-#      - echo "Password: $DOCKER_PASSWORD"
-#
-#  build:
-#    commands:
-#      - ./gradlew clean
-#      - ./gradlew test --no-daemon
-#      - ./gradlew build --no-daemon --stacktrace
-#
-#artifacts:
-#  files:
-#    - build/libs/*.jar
+artifacts:
+  files:
+    - build/libs/*.jar
+	
