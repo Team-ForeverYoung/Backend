@@ -14,13 +14,13 @@ fi
 case $BRANCH in
   develop)
     TAG="dev-$CODEBUILD_WEBHOOK_PREV_COMMIT"
-    docker build -t "$DOCKER_USER_NAME/foreverBE:$TAG" ../../.
-    docker push "$DOCKER_USER_NAME/foreverBE:$TAG"
+    docker build -t "$DOCKER_USER_NAME/foreverbe:$TAG" ../../.
+    docker push "$DOCKER_USER_NAME/foreverbe:$TAG"
     ;;
   main)
     TAG="prod-$CODEBUILD_WEBHOOK_PREV_COMMIT"
-    docker build -t "$DOCKER_USER_NAME/foreverBE:$TAG" ../../.
-    docker push "$DOCKER_USER_NAME/foreverBE:$TAG"
+    docker build -t "$DOCKER_USER_NAME/foreverbe:$TAG" ../../.
+    docker push "$DOCKER_USER_NAME/foreverbe:$TAG"
     ;;
   *)
     echo "지원되지 않는 브랜치: $BRANCH"
