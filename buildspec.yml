@@ -8,7 +8,7 @@ env:
 phases:
   install:
     commands:
-      - echo "Docker Login: $DOCKER_USER_NAME / $DOCKER_PASSWORD"  # 값 확인용 (운영환경에선 삭제)
+      - echo $DOCKER_USER_NAME
 
 
 #version: 0.2
