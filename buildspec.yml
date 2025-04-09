@@ -5,7 +5,7 @@ phases:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "현재 브랜치: ${CODEBUILD_SOURCE_VERSION#refs/heads/}"
+      - echo "현재 브랜치:${CODEBUILD_SOURCE_VERSION#refs/heads/}"
       - |
         case "${CODEBUILD_SOURCE_VERSION#refs/heads/}" in
           main)    echo "main 브랜치 빌드 시작" ;;
