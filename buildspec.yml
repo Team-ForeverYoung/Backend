@@ -1,23 +1,10 @@
 version: 0.2
 
-env:
-  secrets-manager:
-    DOCKER_USER_NAME: "cj/dev/forever/cicdtest-aZvAJy:DOCKER_USER_NAME"
-    DOCKER_PASSWORD: "cj/dev/forever/cicdtest-aZvAJy:DOCKER_PASSWORD"
-
 phases:
   install:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "Docker Credential 로드 완료"
-      - echo "현재 브랜치: ${CODEBUILD_SOURCE_VERSION##*/}"
-      - |
-        BRANCH="${CODEBUILD_SOURCE_VERSION##*/}"
-        if [[ "$BRANCH" != "main" && "$BRANCH" != "develop" ]]; then
-          echo "ERROR: 허용되지 않은 브랜치"; exit 1;
-        fi
-        echo "$BRANCH 브랜치 빌드 시작"
       - chmod +x ./gradlew
 
   build:
