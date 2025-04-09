@@ -4,7 +4,7 @@ phases:
   install:
     commands:
       - echo "$DOCKER_USER_NAME"
-      - echo "Username: $DOCKER_USER_NAME"
+      - echo "Username:$DOCKER_USER_NAME"
 
 
 
