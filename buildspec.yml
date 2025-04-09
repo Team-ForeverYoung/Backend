@@ -5,22 +5,19 @@ phases:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "현재 브랜치:$CODEBUILD_SOURCE_VERSION"
+      - echo "현재 브랜치: ${CODEBUILD_SOURCE_VERSION#refs/heads/}"
       - |
-        if [[ "$CODEBUILD_SOURCE_VERSION" == "refs/heads/main" ]]; then
-          echo "main 브랜치에 대한 빌드를 시작합니다."
-        elif [[ "$CODEBUILD_SOURCE_VERSION" == "refs/heads/develop" ]]; then
-          echo "develop 브랜치에 대한 빌드를 시작합니다."
-        else
-          echo "main,develop 브랜치가 아닙니다."
-          exit 1  
-        fi
+        case "${CODEBUILD_SOURCE_VERSION#refs/heads/}" in
+          main)    echo "main 브랜치 빌드 시작" ;;
+          develop) echo "develop 브랜치 빌드 시작" ;;
+          *)       echo "지원되지 않는 브랜치"; exit 1 ;;
+        esac
       - chmod +x ./gradlew
+
   pre_build:
     commands:
       - echo "도커 로그인 시도..."
-      - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER_NAME --password-stdin || { echo "로그인 실패"; exit 1; }
-
+      - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER_NAME --password-stdin
 
   build:
     commands:
@@ -32,5 +29,4 @@ phases:
 
 artifacts:
   files:
-    - build/libs/*.jar
-	
+    - build/libs/*.jar  # 주의: 공백 2칸으로 들여쓰기
