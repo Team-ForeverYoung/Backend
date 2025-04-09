@@ -10,8 +10,6 @@ phases:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "Docker ID: $DOCKER_USER_NAME"
-      - echo "Docker Password: $DOCKER_PASSWORD"
       - echo "Docker Credential 로드 완료"
       - echo "현재 브랜치: ${CODEBUILD_SOURCE_VERSION##*/}"
       - |
