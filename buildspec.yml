@@ -2,21 +2,29 @@ version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      java: corretto17  
     commands:
-      - echo Installing dependencies...
-      - ./gradlew build -x test # 의존성 설치 (테스트 제외)
-  pre_build:
-    commands:
-      - echo Preparing for build...
+      - echo "현재 브랜치: $CODEBUILD_SOURCE_VERSION"
+      - |
+        if [[ "$CODEBUILD_SOURCE_VERSION" == "refs/heads/main" ]]; then
+          echo "main 브랜치에 대한 빌드를 시작합니다."
+        elif [[ "$CODEBUILD_SOURCE_VERSION" == "refs/heads/develop" ]]; then
+          echo "develop 브랜치에 대한 빌드를 시작합니다."
+        else
+          echo "main,develop 브랜치가 아닙니다."
+          exit 1  
+        fi
+      - chmod +x ./gradlew 
+
   build:
     commands:
-      - echo Building the project...
-      - ./gradlew clean build -x test # 빌드 (테스트 제외)
-  post_build:
-    commands:
-      - echo Build completed.
+      - ./gradlew clean  
+      - echo "🧪 테스트 코드 실행"
+      - ./gradlew test  
+      - echo "빌드 및 패키징 실행"
+      - ./gradlew build --no-daemon  
+
 artifacts:
   files:
-    - build/libs/*.jar # 빌드된 JAR 파일을 아티팩트로 설정
-  discard-paths: yes
-  base-directory: build/libs # 아티팩트의 경로를 지정 (빌드된 JAR 파일이 위치하는 디렉토리)
+    - build/libs/*.jar
