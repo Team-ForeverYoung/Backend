@@ -8,7 +8,7 @@ env:
 phases:
   install:
     commands:
-      - echo $DOCKER_USER_NAME
+      - echo "$DOCKER_USER_NAME"
 
 
 #version: 0.2
