@@ -11,11 +11,11 @@ phases:
       java: corretto17
     commands:
       - chmod +x ./gradlew
+      - echo "Username: $DOCKER_USER_NAME"
+      - echo "Password: $DOCKER_PASSWORD"
 
   build:
     commands:
-      - echo "Username: $DOCKER_USER_NAME"
-      - echo "Password: $DOCKER_PASSWORD"
       - ./gradlew clean
       - ./gradlew test --no-daemon
       - ./gradlew build --no-daemon --stacktrace
