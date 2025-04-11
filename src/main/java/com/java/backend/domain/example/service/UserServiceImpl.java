@@ -7,7 +7,7 @@ import com.java.backend.domain.user.entity.User;
 import com.java.backend.domain.example.repository.OliveUserRepository;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
     private final OliveUserRepository oliveUserRepository;
 
     public UserServiceImpl(OliveUserRepository oliveUserRepository) {
