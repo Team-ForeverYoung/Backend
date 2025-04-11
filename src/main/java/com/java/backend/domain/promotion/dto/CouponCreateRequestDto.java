@@ -2,6 +2,7 @@ package com.java.backend.domain.promotion.dto;
 
 import java.time.LocalDate;
 
+
 public class CouponCreateRequestDto {
 	private String couponName;
 	private LocalDate expiredTime;
