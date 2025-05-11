@@ -1,14 +1,46 @@
 pipeline {
-    agent any
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: build
+    image: ubuntu:22.04
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+      - name: docker-sock
+        mountPath: /var/run/docker.sock
+  volumes:
+    - name: docker-sock
+      hostPath:
+        path: /var/run/docker.sock
+"""
+            defaultContainer 'build'
+        }
+    }
 
     environment {
         AWS_REGION  = 'ap-northeast-2'
         ECR_REPO    = credentials('forever-be-dev-ecr-uri')
         BRANCH_NAME = "${env.GIT_BRANCH}".replaceAll('/', '-')
-
     }
 
     stages {
+        stage('Install Tools') {
+            steps {
+                sh '''
+                    apt-get update
+                    apt-get install -y docker.io awscli git unzip lsb-release ca-certificates gnupg
+                    docker --version
+                    aws --version
+                '''
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -53,6 +85,5 @@ pipeline {
                 """
             }
         }
-
     }
 }
