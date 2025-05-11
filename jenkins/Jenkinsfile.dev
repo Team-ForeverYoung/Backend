@@ -1,14 +1,46 @@
 pipeline {
     agent any
+
+    environment {
+        AWS_REGION  = 'ap-northeast-2'
+        ECR_REPO    = credentials('ecr-repo-uri') // ECR URI 저장된 Jenkins Credential ID
+        BRANCH_NAME = "${env.GIT_BRANCH}".replaceAll('/', '-')
+        COMMIT_HASH = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+        BUILD_TAG   = "${BRANCH_NAME}-${env.BUILD_NUMBER}-${COMMIT_HASH}"
+    }
+
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('Test') {
+
+        stage('Login to ECR') {
             steps {
-                echo 'GitHub 웹훅 연동 테스트!!!!'
+                sh """
+                    aws ecr get-login-password --region $AWS_REGION | \
+                    docker login --username AWS --password-stdin $ECR_REPO
+                """
+            }
+        }
+
+        stage('Gradle Build') {
+            steps {
+                sh './gradlew clean'
+                sh './gradlew test'
+                sh './gradlew build --no-daemon'
+            }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+                sh """
+                    docker build -t $ECR_REPO:${BUILD_TAG} .
+                    docker tag $ECR_REPO:${BUILD_TAG} $ECR_REPO:latest
+                    docker push $ECR_REPO:${BUILD_TAG}
+                    docker push $ECR_REPO:latest
+                """
             }
         }
     }
