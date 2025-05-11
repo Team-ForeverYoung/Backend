@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         AWS_REGION  = 'ap-northeast-2'
-        ECR_REPO    = credentials('ecr-repo-uri') // ECR URI 저장된 Jenkins Credential ID
+        ECR_REPO    = credentials('forever-be-dev-ecr-uri') // ECR URI 저장된 Jenkins Credential ID
         BRANCH_NAME = "${env.GIT_BRANCH}".replaceAll('/', '-')
         COMMIT_HASH = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
         BUILD_TAG   = "${BRANCH_NAME}-${env.BUILD_NUMBER}-${COMMIT_HASH}"
