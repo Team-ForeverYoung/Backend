@@ -15,18 +15,32 @@ spec:
       tty: true
       securityContext:
         runAsUser: 0
+      volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+  volumes:
+    - name: docker-sock
+      hostPath:
+        path: /var/run/docker.sock
 """
             defaultContainer 'build'
         }
     }
-    // ... (환경변수, stages 등 동일)
+
+    environment {
+        AWS_REGION  = 'ap-northeast-2'
+        ECR_REPO    = credentials('forever-be-dev-ecr-uri')
+        BRANCH_NAME = "${env.GIT_BRANCH}".replaceAll('/', '-')
+        JAVA_HOME   = '/usr/lib/jvm/java-17-openjdk-amd64'
+        PATH        = "${JAVA_HOME}/bin:${env.PATH}"
+    }
+
     stages {
         stage('Install Dependencies') {
             steps {
                 sh '''
                     apt-get update
-                    apt-get install -y unzip curl sudo lsb-release ca-certificates gnupg git openjdk-17-jdk
-
+                    apt-get install -y unzip curl sudo lsb-release ca-certificates gnupg git docker.io openjdk-17-jdk
                     # Docker, buildx 설치
                     curl -fsSL https://get.docker.com | sh
                     mkdir -p ~/.docker/cli-plugins/
@@ -34,7 +48,7 @@ spec:
                     chmod +x ~/.docker/cli-plugins/docker-buildx
                     docker buildx version
 
-                    # AWS CLI 설치
+                    # AWS CLI v2 설치
                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
                     unzip awscliv2.zip
                     ./aws/install
@@ -44,7 +58,41 @@ spec:
                 '''
             }
         }
-        // ... (checkout, set build vars 등 동일)
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Set Build Vars') {
+            steps {
+                script {
+                    COMMIT_HASH = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+                    BUILD_TAG   = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}-${COMMIT_HASH}"
+                    env.COMMIT_HASH = COMMIT_HASH
+                    env.BUILD_TAG = BUILD_TAG
+                }
+            }
+        }
+
+        stage('Login to ECR') {
+            steps {
+                sh '''
+                    aws ecr get-login-password --region $AWS_REGION | \
+                    docker login --username AWS --password-stdin $ECR_REPO
+                '''
+            }
+        }
+
+        stage('Gradle Build') {
+            steps {
+                sh './gradlew clean'
+                sh './gradlew test'
+                sh './gradlew build --no-daemon'
+            }
+        }
+
         stage('Docker Buildx Build & Push') {
             steps {
                 sh '''
