@@ -55,8 +55,7 @@ spec:
                     unzip awscliv2.zip
                     ./aws/install
 
-                    # ECR 로그인
-                    aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
+          
                 '''
             }
         }
@@ -82,7 +81,7 @@ spec:
             steps {
                 sh '''
                     aws ecr get-login-password --region $AWS_REGION | \
-                    docker login --username AWS --password-stdin $ECR_REPO
+                    docker login --username AWS --password-stdin $ECR_REPO_URI
                 '''
             }
         }
@@ -98,10 +97,15 @@ spec:
         stage('Docker Buildx Build & Push') {
             steps {
                 sh '''
-                    docker buildx rm mybuilder || true
-                    docker buildx create --driver kubernetes --name mybuilder --use
-                    docker buildx build --builder mybuilder --platform linux/amd64,linux/arm64 --push -t $ECR_REPO_URI:${BUILD_TAG} -t $ECR_REPO_URI:latest .
-                  
+                    docker buildx create --name mybuilder --driver docker-container --use || true
+                    docker buildx inspect mybuilder --bootstrap
+                    docker buildx build \
+                    --builder mybuilder \
+                    --platform linux/amd64,linux/arm64 \
+                    --push \
+                    -t $ECR_REPO_URI:${BUILD_TAG} \
+                    -t $ECR_REPO_URI:latest .
+
                 '''
             }
         }
