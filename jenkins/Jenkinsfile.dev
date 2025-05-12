@@ -48,22 +48,22 @@ spec:
         stage('Install Dependencies') {
             steps {
                 sh '''
-                    apt-get update
-                    apt-get install -y unzip curl sudo lsb-release ca-certificates gnupg git docker.io openjdk-17-jdk
-                    # Docker, buildx 설치
-                    curl -fsSL https://get.docker.com | sh
-                    mkdir -p ~/.docker/cli-plugins/
-                    curl -SL https://github.com/docker/buildx/releases/download/v0.14.0/buildx-v0.14.0.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx
-                    chmod +x ~/.docker/cli-plugins/docker-buildx
-                    docker buildx version
+             # Alpine 패키지 설치
+             apk update
+             apk add --no-cache curl unzip git bash
 
-                    # AWS CLI v2 설치
-                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                    unzip awscliv2.zip
-                    ./aws/install
+             # (docker:24에는 이미 도커엔진, 도커 CLI, buildx가 내장되어 있습니다)
+             docker version
+             docker buildx version
 
-                    # ECR 로그인
-                    aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
+             # AWS CLI v2 설치 (이미 설치되어 있을 수도 있으나, 최신버전 설치 예시)
+             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+             unzip awscliv2.zip
+             ./aws/install || true
+
+             # ECR 로그인
+             aws --version
+             aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
                 '''
             }
         }
@@ -105,13 +105,16 @@ spec:
         stage('Docker Buildx Build & Push') {
             steps {
                 sh '''
-                   # 현재 AWS 인증 정보 확인
-                      env | grep AWS
-                      cat ~/.aws/credentials || echo "no credentials file"
-                      aws sts get-caller-identity
+                    # 환경/인증 정보 확인
+                    env | grep AWS
+                    aws sts get-caller-identity
 
-                      docker build -t $ECR_REPO_URI:$TAG .
-                      docker push $ECR_REPO_URI:$TAG
+                    # 태그 변수 세팅
+                    TAG=${BUILD_TAG:-latest}
+
+                    # 도커 빌드 및 푸시
+                    docker build -t $ECR_REPO_URI:$TAG .
+                    docker push $ECR_REPO_URI:$TAG
                 '''
             }
         }
