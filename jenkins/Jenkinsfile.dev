@@ -4,10 +4,7 @@ pipeline {
             yaml """
 
 apiVersion: v1
-kind: Pod
-metadata:
-  name: jenkins-pod
-  namespace: jenkins
+kind: Pods
 spec:
   serviceAccountName: jenkins
   securityContext:
