@@ -46,7 +46,7 @@ spec:
                     apk add --no-cache curl unzip git openjdk17 sudo shadow bash coreutils binutils python3 py3-pip
 
                       # AWS CLI 설치 (pip 기반)
-                    pip3 install awscli --upgrade --user
+                    pip install awscli --break-system-packages --user
                     export PATH=$PATH:/root/.local/bin
 
                     # Docker buildx 설치
