@@ -16,7 +16,6 @@ pipeline {
          env:
            - name: DOCKER_TLS_CERTDIR
              value: ""
-         args: ["--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock"]
          volumeMounts:
            - name: docker-graph
              mountPath: /var/lib/docker
@@ -26,7 +25,7 @@ pipeline {
          command: ["sleep", "infinity"]
          env:
            - name: DOCKER_HOST
-             value: tcp://localhost:2375
+             value: tcp://dind:2375
          volumeMounts:
            - name: docker-graph
              mountPath: /var/lib/docker
