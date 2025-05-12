@@ -78,6 +78,15 @@ spec:
             }
         }
 
+        stage('Login to ECR') {
+            steps {
+                sh '''
+                    aws ecr get-login-password --region $AWS_REGION | \
+                    docker login --username AWS --password-stdin $ECR_REPO
+                '''
+            }
+        }
+
         stage('Gradle Build') {
             steps {
                 sh './gradlew clean'
