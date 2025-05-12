@@ -31,7 +31,7 @@ spec:
     environment {
         AWS_REGION  = 'ap-northeast-2'
         ECR_REPO_URI    = credentials('forever-be-dev-ecr-uri')
-        ECR_REPO = = credentials('forever-be-dev-ecr')
+        ECR_REPO = credentials('forever-be-dev-ecr')
         BRANCH_NAME = "${env.GIT_BRANCH}".replaceAll('/', '-')
         JAVA_HOME   = '/usr/lib/jvm/java-17-openjdk-amd64'
         PATH        = "${JAVA_HOME}/bin:${env.PATH}"
