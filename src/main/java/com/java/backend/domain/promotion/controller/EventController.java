@@ -28,5 +28,4 @@ public class EventController {
 		RestApiResponse restApiResponse = new RestApiResponse(PromotionCode.USER_EVENT_CREATED_SUCCESS);
 		return ResponseEntity.ok(restApiResponse);
 	}
-
 }

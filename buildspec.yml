@@ -1,18 +1,21 @@
 version: 0.2
-#웹훅 테스트...
 phases:
-  install:
-    runtime-versions:
-      java: corretto17
+  pre_build:
     commands:
-      - chmod +x ./gradlew
+      aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $ECR_REPOSITORY
+
 
   build:
     commands:
       - ./gradlew clean
-      - ./gradlew test --no-daemon
-      - ./gradlew build --no-daemon --stacktrace
+      - ./gradlew test
+      - ./gradlew build --no-daemon
+      - docker build -t $ECR_URI:latest  .
+
+  post_build:
+    commands:
+      - docker push $ECR_URI:latest
 
 artifacts:
   files:
-    - build/libs/*.jar
+    - '**/*'
