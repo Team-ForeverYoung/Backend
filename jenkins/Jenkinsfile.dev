@@ -2,9 +2,8 @@ pipeline {
     agent {
         kubernetes {
             yaml """
-
 apiVersion: v1
-kind: Pods
+kind: Pod
 spec:
   serviceAccountName: jenkins
   securityContext:
