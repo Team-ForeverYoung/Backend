@@ -3,7 +3,24 @@ pipeline {
        kubernetes {
            yaml """
    apiVersion: v1
+   kind: Service
+   metadata:
+     name: dind-service  # 서비스 이름
+   spec:
+     selector:
+       app: dind-pod
+     ports:
+       - protocol: TCP
+         port: 2375
+         targetPort: 2375
+
+   ---
+   apiVersion: v1
    kind: Pod
+   metadata:
+     name: dind-pod  # Pod 이름
+     labels:
+       app: dind-pod  # 선택자로 서비스와 연결
    spec:
      serviceAccountName: jenkins
      containers:
@@ -16,20 +33,19 @@ pipeline {
          env:
            - name: DOCKER_TLS_CERTDIR
              value: ""
+         args: ["--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock"]
          volumeMounts:
            - name: docker-graph
              mountPath: /var/lib/docker
-
        - name: build
          image: docker:24
          command: ["sleep", "infinity"]
          env:
            - name: DOCKER_HOST
-             value: tcp://dind:2375
+             value: tcp://dind-service:2375  # 서비스 이름으로 연결
          volumeMounts:
            - name: docker-graph
              mountPath: /var/lib/docker
-
      volumes:
        - name: docker-graph
          emptyDir: {}
