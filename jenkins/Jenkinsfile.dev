@@ -23,7 +23,7 @@ spec:
       command: ["sleep", "infinity"]
       env:
         - name: DOCKER_HOST
-          value: tcp://dind:2375s
+          value: tcp://dind:2375
       volumeMounts:
         - name: docker-graph
           mountPath: /var/lib/docker
