@@ -9,6 +9,7 @@ pipeline {
      containers:
        - name: dind
          image: docker:24-dind
+         hostname: dind
          securityContext:
            privileged: true
            runAsUser: 0
