@@ -22,7 +22,6 @@ spec:
             defaultContainer 'build'
         }
     }
-
     environment {
         AWS_REGION  = 'ap-northeast-2'
         ECR_REPO    = credentials('forever-be-dev-ecr-uri')
