@@ -98,25 +98,24 @@ spec:
         stage('Docker Buildx Build & Push') {
             steps {
                 sh '''
-                    # 현재 AWS 인증 정보 확인
-                    env | grep AWS
-                    cat ~/.aws/credentials || echo "no credentials file"
-                    aws sts get-caller-identity
+                   # 현재 AWS 인증 정보 확인
+                      env | grep AWS
+                      cat ~/.aws/credentials || echo "no credentials file"
+                      aws sts get-caller-identity
 
-                    # 최신 buildx 설치 (v0.14.0)
-                    mkdir -p ~/.docker/cli-plugins/
-                    curl -SL https://github.com/docker/buildx/releases/download/v0.14.0/buildx-v0.14.0.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx
-                    chmod +x ~/.docker/cli-plugins/docker-buildx
-                    docker buildx version
+                      # 최신 buildx 설치 (v0.14.0)
+                      mkdir -p ~/.docker/cli-plugins/
+                      curl -SL https://github.com/docker/buildx/releases/download/v0.14.0/buildx-v0.14.0.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx
+                      chmod +x ~/.docker/cli-plugins/docker-buildx
+                      docker buildx version
 
-                    # builder 재생성 (IRSA 인증 적용)
-                    docker buildx rm mybuilder || true
-                    docker buildx create --driver kubernetes --name mybuilder --use \
-                    --kubernetes-service-account jenkins \
-                    --kubernetes-namespace jenkins
+                      # builder 재생성 (IRSA 인증 적용)
+                      docker buildx rm mybuilder || true
+                      docker buildx create --driver kubernetes --name mybuilder --use \
+                        --driver-opt=namespace=jenkins,serviceaccount=jenkins
 
-                    # 멀티플랫폼 빌드 & ECR 푸시
-                    docker buildx build --builder mybuilder --platform linux/amd64,linux/arm64 --push -t $ECR_REPO_URI:${BUILD_TAG} -t $ECR_REPO_URI:latest .
+                      # 멀티플랫폼 빌드 & ECR 푸시
+                      docker buildx build --builder mybuilder --platform linux/amd64,linux/arm64 --push -t $ECR_REPO_URI:${BUILD_TAG} -t $ECR_REPO_URI:latest .
                 '''
             }
         }
