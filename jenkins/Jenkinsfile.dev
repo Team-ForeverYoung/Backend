@@ -1,43 +1,32 @@
 pipeline {
-   agent {
-       kubernetes {
-           yaml """
-   apiVersion: v1
-   kind: Pod
-   spec:
-     serviceAccountName: jenkins
-     containers:
-       - name: dind
-         image: docker:24-dind
-         hostname: dind
-         securityContext:
-           privileged: true
-           runAsUser: 0
-         env:
-           - name: DOCKER_TLS_CERTDIR
-             value: ""
-         volumeMounts:
-           - name: docker-graph
-             mountPath: /var/lib/docker
-
-       - name: build
-         image: docker:24
-         command: ["sleep", "infinity"]
-         env:
-           - name: DOCKER_HOST
-             value: tcp://localhost:2375
-         volumeMounts:
-           - name: docker-graph
-             mountPath: /var/lib/docker
-
-     volumes:
-       - name: docker-graph
-         emptyDir: {}
-   """
-           defaultContainer 'build'
-       }
-   }
-
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  serviceAccountName: jenkins
+  securityContext:
+    runAsUser: 0
+  containers:
+    - name: build
+      image: ubuntu:22.04
+      command:
+        - cat
+      tty: true
+      securityContext:
+        runAsUser: 0
+      volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+  volumes:
+    - name: docker-sock
+      hostPath:
+        path: /var/run/docker.sock
+"""
+            defaultContainer 'build'
+        }
+    }
 
     environment {
         AWS_REGION  = 'ap-northeast-2'
@@ -52,22 +41,22 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-             # Alpine 패키지 설치
-             apk update
-             apk add --no-cache curl unzip git bash
+                    apt-get update
+                    apt-get install -y unzip curl sudo lsb-release ca-certificates gnupg git docker.io openjdk-17-jdk
+                    # Docker, buildx 설치
+                    curl -fsSL https://get.docker.com | sh
+                    mkdir -p ~/.docker/cli-plugins/
+                    curl -SL https://github.com/docker/buildx/releases/download/v0.14.0/buildx-v0.14.0.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx
+                    chmod +x ~/.docker/cli-plugins/docker-buildx
+                    docker buildx version
 
-             # (docker:24에는 이미 도커엔진, 도커 CLI, buildx가 내장되어 있습니다)
-             docker version
-             docker buildx version
+                    # AWS CLI v2 설치
+                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                    unzip awscliv2.zip
+                    ./aws/install
 
-             # AWS CLI v2 설치 (이미 설치되어 있을 수도 있으나, 최신버전 설치 예시)
-             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-             unzip awscliv2.zip
-             ./aws/install || true
-
-             # ECR 로그인
-             aws --version
-             aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
+                    # ECR 로그인
+                    aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
                 '''
             }
         }
@@ -109,16 +98,24 @@ pipeline {
         stage('Docker Buildx Build & Push') {
             steps {
                 sh '''
-                    # 환경/인증 정보 확인
-                    env | grep AWS
-                    aws sts get-caller-identity
+                   # 현재 AWS 인증 정보 확인
+                      env | grep AWS
+                      cat ~/.aws/credentials || echo "no credentials file"
+                      aws sts get-caller-identity
 
-                    # 태그 변수 세팅
-                    TAG=${BUILD_TAG:-latest}
+                      # 최신 buildx 설치 (v0.14.0)
+                      mkdir -p ~/.docker/cli-plugins/
+                      curl -SL https://github.com/docker/buildx/releases/download/v0.14.0/buildx-v0.14.0.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx
+                      chmod +x ~/.docker/cli-plugins/docker-buildx
+                      docker buildx version
 
-                    # 도커 빌드 및 푸시
-                    docker build -t $ECR_REPO_URI:$TAG .
-                    docker push $ECR_REPO_URI:$TAG
+                      # builder 재생성 (IRSA 인증 적용)
+                      docker buildx rm mybuilder || true
+                      docker buildx create --driver kubernetes --name mybuilder --use \
+                        --driver-opt=namespace=jenkins,serviceaccount=jenkins
+
+                      # 멀티플랫폼 빌드 & ECR 푸시
+                      docker buildx build --builder mybuilder --platform linux/amd64,linux/arm64 --push -t $ECR_REPO_URI:${BUILD_TAG} -t $ECR_REPO_URI:latest .
                 '''
             }
         }
