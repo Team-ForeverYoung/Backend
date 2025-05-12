@@ -30,7 +30,8 @@ spec:
 
     environment {
         AWS_REGION  = 'ap-northeast-2'
-        ECR_REPO    = credentials('forever-be-dev-ecr-uri')
+        ECR_REPO_URI    = credentials('forever-be-dev-ecr-uri')
+        ECR_REPO = = credentials('forever-be-dev-ecr')
         BRANCH_NAME = "${env.GIT_BRANCH}".replaceAll('/', '-')
         JAVA_HOME   = '/usr/lib/jvm/java-17-openjdk-amd64'
         PATH        = "${JAVA_HOME}/bin:${env.PATH}"
@@ -77,15 +78,6 @@ spec:
             }
         }
 
-        stage('Login to ECR') {
-            steps {
-                sh '''
-                    aws ecr get-login-password --region $AWS_REGION | \
-                    docker login --username AWS --password-stdin $ECR_REPO
-                '''
-            }
-        }
-
         stage('Gradle Build') {
             steps {
                 sh './gradlew clean'
@@ -98,7 +90,7 @@ spec:
             steps {
                 sh '''
                     docker buildx create --driver kubernetes --name mybuilder --use
-                    docker buildx build --builder mybuilder --platform linux/amd64,linux/arm64 --push -t $ECR_REPO:${BUILD_TAG} -t $ECR_REPO:latest .
+                    docker buildx build --builder mybuilder --platform linux/amd64,linux/arm64 --push -t $ECR_REPO_URI:${BUILD_TAG} -t $ECR_REPO:latest .
                 '''
             }
         }
