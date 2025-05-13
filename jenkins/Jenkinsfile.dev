@@ -9,21 +9,14 @@ spec:
   securityContext:
     runAsUser: 0
   containers:
-    - name: build
+    - name: dind
       image: docker:24.0.7-dind
-      command:
-        - cat
-      tty: true
       securityContext:
-        runAsUser: 0
         privileged: true
-      volumeMounts:
-        - name: docker-sock
-          mountPath: /var/run/docker.sock
-  volumes:
-    - name: docker-sock
-      hostPath:
-        path: /var/run/docker.sock
+        runAsUser: 0
+      env:
+        - name: DOCKER_TLS_CERTDIR  # TLS 비활성화 (테스트용)
+          value: ""
 """
             defaultContainer 'build'
         }
