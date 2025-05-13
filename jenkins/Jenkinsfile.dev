@@ -15,7 +15,7 @@ spec:
         privileged: true
         runAsUser: 0
       env:
-        - name: DOCKER_TLS_CERTDIR  # TLS 비활성화 (테스트용)
+        - name: DOCKER_TLS_CERTDIR
           value: ""
 """
             defaultContainer 'build'
@@ -23,12 +23,12 @@ spec:
     }
 
     environment {
-        AWS_REGION  = 'ap-northeast-2'
-        ECR_REPO_URI    = credentials('forever-be-dev-ecr-uri')
-        ECR_REPO = credentials('forever-be-dev-ecr')
-        BRANCH_NAME = "${env.GIT_BRANCH}".replaceAll('/', '-')
-        JAVA_HOME = "/usr/lib/jvm/java-17-openjdk"
-        PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
+        AWS_REGION    = 'ap-northeast-2'
+        ECR_REPO_URI  = credentials('forever-be-dev-ecr-uri')
+        ECR_REPO      = credentials('forever-be-dev-ecr')
+        BRANCH_NAME   = "${env.GIT_BRANCH}".replaceAll('/', '-')
+        JAVA_HOME     = "/usr/lib/jvm/java-17-openjdk"
+        PATH          = "${env.JAVA_HOME}/bin:${env.PATH}"
     }
 
     stages {
@@ -37,17 +37,15 @@ spec:
                 sh '''
                     apk update
                     apk add --no-cache \
-                    curl unzip git openjdk17 sudo bash coreutils binutils \
-                    python3 py3-pip make cmake gcc g++ libc-dev libffi-dev openssl-dev \
-                    aws-cli
+                        curl unzip git openjdk17 sudo bash coreutils binutils \
+                        python3 py3-pip make cmake gcc g++ libc-dev libffi-dev openssl-dev \
+                        aws-cli
 
-                    # Docker buildx 설치
                     mkdir -p ~/.docker/cli-plugins/
                     curl -SL https://github.com/docker/buildx/releases/download/v0.14.0/buildx-v0.14.0.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx
                     chmod +x ~/.docker/cli-plugins/docker-buildx
                     docker buildx version
 
-                    # ECR 로그인
                     aws --version
                     aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
                 '''
@@ -91,20 +89,18 @@ spec:
         stage('Docker Buildx Build & Push') {
             steps {
                 sh '''
-                   # 현재 AWS 인증 정보 확인
-                      env | grep AWS
-                      cat ~/.aws/credentials || echo "no credentials file"
-                      aws sts get-caller-identity
+                    env | grep AWS
+                    cat ~/.aws/credentials || echo "no credentials file"
+                    aws sts get-caller-identity
 
-                      # 최신 buildx 설치 (v0.14.0)
-                      mkdir -p ~/.docker/cli-plugins/
-                      curl -SL https://github.com/docker/buildx/releases/download/v0.14.0/buildx-v0.14.0.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx
-                      chmod +x ~/.docker/cli-plugins/docker-buildx
-                      docker buildx version
-                      export DOCKER_BUILDKIT=1
-                      # 멀티플랫폼 빌드 & ECR 푸시
-                      docker buildx build --platform linux/amd64,linux/arm64 --push -t $ECR_REPO_URI:${BUILD_TAG} -t $ECR_REPO_URI:latest .
+                    mkdir -p ~/.docker/cli-plugins/
+                    curl -SL https://github.com/docker/buildx/releases/download/v0.14.0/buildx-v0.14.0.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx
+                    chmod +x ~/.docker/cli-plugins/docker-buildx
+                    docker buildx version
+                    export DOCKER_BUILDKIT=1
 
+                    docker buildx build --platform linux/amd64,linux/arm64 \
+                        --push -t $ECR_REPO_URI:${BUILD_TAG} -t $ECR_REPO_URI:latest .
                 '''
             }
         }
