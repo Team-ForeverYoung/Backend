@@ -18,7 +18,7 @@ spec:
         - name: DOCKER_TLS_CERTDIR
           value: ""
 """
-            defaultContainer 'build'
+            defaultContainer 'dind'
         }
     }
 
