@@ -1,4 +1,4 @@
-package com.java.backend.domain.example.dto;
+package com.java.backend.domain.olive_user.dto;
 
 public class UserRegisterRequestDto {
 

@@ -1,4 +1,4 @@
-package com.java.backend.domain.user.entity;
+package com.java.backend.domain.olive_user.entity;
 
 import com.java.backend.global.entity.BaseEntity;
 

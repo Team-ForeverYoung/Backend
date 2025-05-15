@@ -1,7 +1,7 @@
-package com.java.backend.domain.example.service;
+package com.java.backend.domain.olive_user.service;
 
-import com.java.backend.domain.example.dto.UserRegisterRequestDto;
-import com.java.backend.domain.user.entity.User;
+import com.java.backend.domain.olive_user.dto.UserRegisterRequestDto;
+import com.java.backend.domain.olive_user.entity.User;
 
 public interface UserService {
     void registerOliveUser(UserRegisterRequestDto dto);

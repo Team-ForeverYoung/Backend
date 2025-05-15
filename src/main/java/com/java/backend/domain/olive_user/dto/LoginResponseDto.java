@@ -1,4 +1,4 @@
-package com.java.backend.domain.example.dto;
+package com.java.backend.domain.olive_user.dto;
 
 public class LoginResponseDto {
     private String token; // JWT 등
