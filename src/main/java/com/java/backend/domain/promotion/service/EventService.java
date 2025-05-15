@@ -10,4 +10,3 @@ public interface EventService {
 	public UserEvent joinEvent(EventJoinRequestDto dto);
 
 }
-`

@@ -1,7 +1,7 @@
-package com.java.backend.domain.olive_user.controller;
+package com.java.backend.domain.user.controller;
 
-import com.java.backend.domain.olive_user.dto.LoginRequestDto;
-import com.java.backend.domain.olive_user.entity.User;
+import com.java.backend.domain.user.dto.LoginRequestDto;
+import com.java.backend.domain.user.entity.User;
 import com.java.backend.global.jwt.JwtTokenProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.java.backend.domain.olive_user.dto.UserRegisterRequestDto;
-import com.java.backend.domain.olive_user.service.UserService;
+import com.java.backend.domain.user.dto.UserRegisterRequestDto;
+import com.java.backend.domain.user.service.UserService;
 
 import java.util.Collections;
 import java.util.HashMap;

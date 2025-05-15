@@ -1,7 +1,7 @@
-package com.java.backend.domain.olive_user.repository;
+package com.java.backend.domain.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.java.backend.domain.olive_user.entity.User;
+import com.java.backend.domain.user.entity.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
