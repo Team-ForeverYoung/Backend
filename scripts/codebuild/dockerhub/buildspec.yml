@@ -1,0 +1,29 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+    commands:
+      - chmod +x ./scripts/codebuild/*.sh
+      - ./scripts/codebuild/branch.sh
+      - chmod +x ./gradlew
+
+  pre_build:
+    commands:
+      - ./scripts/codebuild/docker_login.sh
+
+  build:
+    commands:
+      - ./gradlew clean
+      - echo "🧪 테스트 코드 실행"
+      - ./gradlew test
+      - echo "빌드 및 패키징 실행"
+      - ./gradlew build --no-daemon
+  post_build:
+    commands:
+      - ./scripts/codebuild/image_build.sh
+
+artifacts:
+  files:
+    - build/libs/*.jar  # 주의: 공백 2칸으로 들여쓰기
