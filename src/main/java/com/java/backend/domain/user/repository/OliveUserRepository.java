@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface OliveUserRepository extends JpaRepository<User, String> {
-    @Query("SELECT u.password FROM User u WHERE u.userId = :userId")
+    @Query("SELECT u.pass_word FROM User u WHERE u.userId = :userId")
     String findPassWordByUserId(@Param("userId") String userId);
     Optional<User> findByUserId(String userId);
 }
