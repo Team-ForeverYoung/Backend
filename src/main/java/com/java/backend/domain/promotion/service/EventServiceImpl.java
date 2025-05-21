@@ -43,7 +43,7 @@ public class EventServiceImpl implements EventService {
 	@Override
 	@Transactional
 	public UserEvent joinEvent(EventJoinRequestDto dto) {
-		// validateDuplicateJoin(dto.getUserId(), dto.getEventId());
+		validateDuplicateJoin(dto.getUserId(), dto.getEventId());
 		Event event = getEventByEventId(dto.getEventId());
 		validateEventAmount(event);
 
@@ -62,7 +62,7 @@ public class EventServiceImpl implements EventService {
 		return false;
 	}
 
-	// ==== 유효성 검사 메서드들 ====
+
 	private void validateDuplicateJoin(Long userId, Long eventId) {
 		boolean isExist = userEventRepoService.isExistUserEvent(userId, eventId);
 		if (isExist) {
@@ -82,8 +82,8 @@ public class EventServiceImpl implements EventService {
 	}
 
 	private Event getEventByEventId(Long eventId) {
-		return  eventRepoService.findEventByEventId(eventId);
-		// return eventRepoService.findEventByEventIdForUpdate(eventId);
+		// return  eventRepoService.findEventByEventId(eventId);
+		return eventRepoService.findEventByEventIdForUpdate(eventId);
 	}
 
 	private Coupon getCouponByCouponId(Long couponId) {
