@@ -17,9 +17,8 @@ import com.java.backend.domain.promotion.stub.StubUserRepository;
 import com.java.backend.domain.user.entity.User;
 
 import jakarta.transaction.Transactional;
-
 @Service
-public class EventServiceImpl implements EventService{
+public class EventServiceImpl implements EventService {
 	private final EventRepoService eventRepoService;
 	private final CouponRepoService couponRepoService;
 	private final StubUserRepository stubUserRepository;
@@ -44,31 +43,53 @@ public class EventServiceImpl implements EventService{
 	@Override
 	@Transactional
 	public UserEvent joinEvent(EventJoinRequestDto dto) {
+		validateDuplicateJoin(dto.getUserId(), dto.getEventId());
 		Event event = getEventByEventId(dto.getEventId());
-		Coupon coupon =event.getCoupon();
+		validateEventAmount(event);
+
+		Coupon coupon = event.getCoupon();
 		User user = getUserByUserId(dto.getUserId());
-		UserEventFactoryInput dtto = new UserEventFactoryInput(coupon,event,user);
+		UserEventFactoryInput dtto = new UserEventFactoryInput(coupon, event, user);
 		UserEvent userEvent = UserEventFactory.createFromUserRequest(dtto);
-		if (event.getAmount() <= 0) {
-			throw new IllegalStateException("이벤트 수량이 부족합니다.");
-		}
+
 		event.subtractAmount(); // 더티체킹
 		return userEventRepoService.saveUserEvent(userEvent);
 	}
-	//ToDo: 임시 이므로 추후 갈아끼워줘야 함
-	private User getUserByUserId(Long userId){
+
+	@Override
+	public boolean isJoined(Long userId, Long eventId) {
+		// 구현 필요
+		return false;
+	}
+
+	// ==== 유효성 검사 메서드들 ====
+	private void validateDuplicateJoin(Long userId, Long eventId) {
+		boolean isExist = userEventRepoService.isExistUserEvent(userId, eventId);
+		if (isExist) {
+			throw new IllegalStateException("중복참여 입니다.");
+		}
+	}
+
+	private void validateEventAmount(Event event) {
+		if (event.getAmount() <= 0) {
+			throw new IllegalStateException("이벤트 수량이 부족합니다.");
+		}
+	}
+
+
+	private User getUserByUserId(Long userId) {
 		return stubUserRepository.findById(userId).orElseThrow();
 	}
 
-	private Event getEventByEventId(Long eventId){
+	private Event getEventByEventId(Long eventId) {
 		return eventRepoService.findEventByEventIdForUpdate(eventId);
 	}
-	private Coupon getCouponByCouponId(Long couponId){
+
+	private Coupon getCouponByCouponId(Long couponId) {
 		return couponRepoService.getCoupon(couponId);
 	}
 
-	private EventCreateRequestDto recreateDto(EventCreateRequestDto dto, Coupon coupon){
+	private EventCreateRequestDto recreateDto(EventCreateRequestDto dto, Coupon coupon) {
 		return EventCreateRequestDto.of(dto, coupon);
 	}
-
 }
