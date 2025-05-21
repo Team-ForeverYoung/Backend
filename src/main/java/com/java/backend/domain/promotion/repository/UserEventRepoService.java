@@ -11,8 +11,12 @@ public class UserEventRepoService {
 	public UserEventRepoService(UserEventRepository userEventRepository) {
 		this.userEventRepository = userEventRepository;
 	}
+	public boolean isExistUserEvent(Long userId, Long eventId) {
+		return userEventRepository.findByUserAndEvent(userId, eventId).isPresent();
+	}
 
 	public UserEvent saveUserEvent(UserEvent userEvent){
 		return userEventRepository.save(userEvent);
 	}
+
 }
