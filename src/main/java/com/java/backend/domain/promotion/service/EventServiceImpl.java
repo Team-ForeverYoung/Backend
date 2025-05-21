@@ -16,6 +16,7 @@ import com.java.backend.domain.promotion.repository.UserEventRepoService;
 import com.java.backend.domain.promotion.stub.StubUserRepository;
 import com.java.backend.domain.user.entity.User;
 
+import jakarta.transaction.Transactional;
 
 @Service
 public class EventServiceImpl implements EventService{
@@ -41,12 +42,16 @@ public class EventServiceImpl implements EventService{
 	}
 
 	@Override
+	@Transactional
 	public UserEvent joinEvent(EventJoinRequestDto dto) {
 		Event event = getEventByEventId(dto.getEventId());
 		Coupon coupon =event.getCoupon();
 		User user = getUserByUserId(dto.getUserId());
 		UserEventFactoryInput dtto = new UserEventFactoryInput(coupon,event,user);
 		UserEvent userEvent = UserEventFactory.createFromUserRequest(dtto);
+		if (event.getAmount() <= 0) {
+			throw new IllegalStateException("이벤트 수량이 부족합니다.");
+		}
 		event.subtractAmount(); // 더티체킹
 		return userEventRepoService.saveUserEvent(userEvent);
 	}
@@ -56,7 +61,7 @@ public class EventServiceImpl implements EventService{
 	}
 
 	private Event getEventByEventId(Long eventId){
-		return eventRepoService.findEventByEventId(eventId);
+		return eventRepoService.findEventByEventIdForUpdate(eventId);
 	}
 	private Coupon getCouponByCouponId(Long couponId){
 		return couponRepoService.getCoupon(couponId);

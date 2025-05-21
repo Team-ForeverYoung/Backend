@@ -31,4 +31,18 @@ public class EventRepoService {
 		);
 	}
 
+	public Event findEventByEventIdForUpdate(Long eventId) {
+		return eventRepository.findByIdForUpdate(eventId)
+			.orElseThrow(() ->
+				new EventException.eventNotFoundException(
+					ExceptionMetaData.builder()
+						.responseApiCode(PromotionErrorCode.EVENT_NOT_FOUND)
+						.className(this.getClass().getName())
+						.build()
+				)
+			);
+	}
+
+
+
 }
