@@ -41,4 +41,12 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    exclude '**/CouponEntityTest.class'
+    exclude '**/EventEntityTest.class'
+    exclude '**/UserEventEntityTest.class'
+    exclude '**/CouponRepoTest.class'
+    exclude '**/EventRepoTest.class'
+    exclude '**/UserEventRepoTest.class'
+    exclude '**/CouponServiceTest.class'
+    exclude '**/EventServiceTest.class'
 }

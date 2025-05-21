@@ -1,13 +1,6 @@
 package com.java.backend.domain.user.entity;
 
-import com.java.backend.global.entity.BaseEntity;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 
 @Entity
@@ -27,7 +20,7 @@ public class User {
 	private String email;
 
 	@Column
-	private String password;
+	private String pass_word;
 
 	@Column
 	private Integer point;
@@ -40,7 +33,7 @@ public class User {
 		this.userId = userId;
 		this.name = name;
 		this.email = email;
-		this.password = passWord;
+		this.pass_word = passWord;
 		this.point = point;
 		this.country = country;
 	}
@@ -56,7 +49,7 @@ public class User {
 	public String getUserId() { return userId; }
 
 	public String getPassWord() {
-		return password;
+		return pass_word;
 	}
 
 	public Integer getPoint() {

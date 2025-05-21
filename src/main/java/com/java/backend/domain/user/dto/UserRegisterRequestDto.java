@@ -1,4 +1,4 @@
-package com.java.backend.domain.example.dto;
+package com.java.backend.domain.user.dto;
 
 public class UserRegisterRequestDto {
 
