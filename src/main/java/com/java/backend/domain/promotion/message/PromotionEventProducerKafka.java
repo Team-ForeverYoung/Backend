@@ -15,10 +15,11 @@ import com.java.backend.global.kafka.KafkaProducerUtil;
 public class PromotionEventProducerKafka implements PromotionEventProducer{
 
 	private final KafkaProducerUtil kafkaProducerUtil;
-	private ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 	private static final Logger log = LoggerFactory.getLogger(PromotionEventProducerKafka.class);
-	public PromotionEventProducerKafka(KafkaProducerUtil kafkaProducerUtil) {
+	public PromotionEventProducerKafka(KafkaProducerUtil kafkaProducerUtil, ObjectMapper objectMapper) {
 		this.kafkaProducerUtil = kafkaProducerUtil;
+		this.objectMapper = objectMapper;
 	}
 
 
