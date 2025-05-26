@@ -22,8 +22,11 @@ public class PromotionEventProducerKafka implements PromotionEventProducer{
 	@Override
 	public void promotionEventJoinProducer(EventJoinMessage eventJoinMessage) {
 		try {
+			System.out.println("프로듀서 진입");
 			String value = objectMapper.writeValueAsString(eventJoinMessage.getEventJoinRequestDto());
+			System.out.println("직렬화 성공" + value);
 			String key = String.valueOf(eventJoinMessage.getEventJoinRequestDto().getUserId());
+			System.out.println("키 조회" + key);
 			kafkaProducerUtil.send(eventJoinMessage.getTopic(), key, value);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException("카프카 메시지 직렬화 오류", e);
