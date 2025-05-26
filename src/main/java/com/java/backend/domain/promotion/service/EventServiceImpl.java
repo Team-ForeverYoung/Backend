@@ -1,7 +1,10 @@
 package com.java.backend.domain.promotion.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.java.backend.domain.promotion.controller.EventController;
 import com.java.backend.domain.promotion.dto.EventCreateRequestDto;
 import com.java.backend.domain.promotion.dto.EventJoinMessage;
 import com.java.backend.domain.promotion.dto.EventJoinRequestDto;
@@ -26,7 +29,7 @@ public class EventServiceImpl implements EventService {
 	private final StubUserRepository stubUserRepository;
 	private final UserEventRepoService userEventRepoService;
 	private final PromotionEventProducer promotionEventProducer;
-
+	private static final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
 	public EventServiceImpl(EventRepoService eventRepoService, CouponRepoService couponRepoService,
 		StubUserRepository stubUserRepository, UserEventRepoService userEventRepoService,
 		PromotionEventProducer promotionEventProducer) {
@@ -69,9 +72,9 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public void publishEventJoin(EventJoinRequestDto dto) {
-		System.out.println("publish 실행");
+		log.debug("서비스 진입");
 		String topic = eventRepoService.findEventByEventId(dto.getEventId()).getEventName();
-		System.out.println("topic 조회 실행" + topic);
+		log.debug("topic 조회 실행" + topic);
 		EventJoinMessage eventJoinMessage = new EventJoinMessage(dto,topic);
 		promotionEventProducer.promotionEventJoinProducer(eventJoinMessage);
 	}

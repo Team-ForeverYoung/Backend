@@ -1,5 +1,7 @@
 package com.java.backend.domain.promotion.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import com.java.backend.global.code.RestApiResponse;
 @RequestMapping("api/v1/event")
 public class EventController {
 	private final EventService eventService;
+	private static final Logger log = LoggerFactory.getLogger(EventController.class);
 
 	public EventController(EventService eventService) {
 		this.eventService = eventService;
@@ -24,6 +27,10 @@ public class EventController {
 
 	@PostMapping
 	public ResponseEntity<ResponseApiCode> join(@RequestBody EventJoinRequestDto dto){
+
+		log.debug("EventJoinRequestDto: {}", dto);
+		log.debug("eventId: {}", dto.getEventId());
+		log.debug("userId: {}", dto.getUserId());
 		eventService.publishEventJoin(dto);
 		RestApiResponse restApiResponse = new RestApiResponse(PromotionCode.USER_EVENT_CREATED_SUCCESS);
 		return ResponseEntity.ok(restApiResponse);
