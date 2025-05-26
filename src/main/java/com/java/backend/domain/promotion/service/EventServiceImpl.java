@@ -3,6 +3,7 @@ package com.java.backend.domain.promotion.service;
 import org.springframework.stereotype.Service;
 
 import com.java.backend.domain.promotion.dto.EventCreateRequestDto;
+import com.java.backend.domain.promotion.dto.EventJoinMessage;
 import com.java.backend.domain.promotion.dto.EventJoinRequestDto;
 import com.java.backend.domain.promotion.dto.UserEventFactoryInput;
 import com.java.backend.domain.promotion.entity.Coupon;
@@ -10,6 +11,7 @@ import com.java.backend.domain.promotion.entity.Event;
 import com.java.backend.domain.promotion.entity.UserEvent;
 import com.java.backend.domain.promotion.factory.EventFactory;
 import com.java.backend.domain.promotion.factory.UserEventFactory;
+import com.java.backend.domain.promotion.message.PromotionEventProducer;
 import com.java.backend.domain.promotion.repository.CouponRepoService;
 import com.java.backend.domain.promotion.repository.EventRepoService;
 import com.java.backend.domain.promotion.repository.UserEventRepoService;
@@ -23,13 +25,16 @@ public class EventServiceImpl implements EventService {
 	private final CouponRepoService couponRepoService;
 	private final StubUserRepository stubUserRepository;
 	private final UserEventRepoService userEventRepoService;
+	private final PromotionEventProducer promotionEventProducer;
 
 	public EventServiceImpl(EventRepoService eventRepoService, CouponRepoService couponRepoService,
-		StubUserRepository stubUserRepository, UserEventRepoService userEventRepoService) {
+		StubUserRepository stubUserRepository, UserEventRepoService userEventRepoService,
+		PromotionEventProducer promotionEventProducer) {
 		this.eventRepoService = eventRepoService;
 		this.couponRepoService = couponRepoService;
 		this.stubUserRepository = stubUserRepository;
 		this.userEventRepoService = userEventRepoService;
+		this.promotionEventProducer = promotionEventProducer;
 	}
 
 	@Override
@@ -62,6 +67,12 @@ public class EventServiceImpl implements EventService {
 		return false;
 	}
 
+	@Override
+	public void publishEventJoin(EventJoinRequestDto dto) {
+		String topic = eventRepoService.findEventByEventId(dto.getEventId()).getEventName();
+		EventJoinMessage eventJoinMessage = new EventJoinMessage(dto,topic);
+		promotionEventProducer.promotionEventJoinProducer(eventJoinMessage);
+	}
 
 	private void validateDuplicateJoin(Long userId, Long eventId) {
 		boolean isExist = userEventRepoService.isExistUserEvent(userId, eventId);

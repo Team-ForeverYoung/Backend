@@ -9,5 +9,6 @@ public interface EventService {
 	public Event createEvent(EventCreateRequestDto dto);
 	public UserEvent joinEvent(EventJoinRequestDto dto);
 	public boolean isJoined(Long userId, Long eventId);
+	public void publishEventJoin(EventJoinRequestDto dto);
 
 }
