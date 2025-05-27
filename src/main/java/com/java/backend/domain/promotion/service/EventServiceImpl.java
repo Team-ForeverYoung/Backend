@@ -72,11 +72,9 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public void publishEventJoin(EventJoinRequestDto dto) {
-		log.debug("서비스 진입");
 		Long eventId = dto.getEventId();
-		String topic = eventRepoService.findEventByEventId(eventId).getEventName();
-		log.debug("topic 조회 실행" + topic);
-		EventJoinMessage eventJoinMessage = new EventJoinMessage(dto,topic);
+		String promotionKey = eventRepoService.findEventByEventId(eventId).getEventName();
+		EventJoinMessage eventJoinMessage = new EventJoinMessage(dto,promotionKey);
 		promotionEventProducer.promotionEventJoinProducer(eventJoinMessage);
 	}
 
