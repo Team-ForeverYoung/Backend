@@ -5,10 +5,10 @@ import lombok.Getter;
 @Getter
 public class EventJoinMessage {
 	private final EventJoinRequestDto eventJoinRequestDto;
-	private final String topic;
+	private final String promotionKey;
 
-	public EventJoinMessage(EventJoinRequestDto eventJoinRequestDto, String topic) {
+	public EventJoinMessage(EventJoinRequestDto eventJoinRequestDto, String promotionKey) {
 		this.eventJoinRequestDto = eventJoinRequestDto;
-		this.topic = topic;
+		this.promotionKey = promotionKey;
 	}
 }
