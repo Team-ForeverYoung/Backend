@@ -10,6 +10,7 @@ import com.java.backend.domain.promotion.service.EventService;
 @Component
 public class PromotionEventConsumerKafka implements PromotionEventConsumer{
 	private final EventService eventService;
+	private static final String TOPIC = "promotion_event";
 	private static final String SUMMER_EVENT = "SummerEvent";
 
 	public PromotionEventConsumerKafka(EventService eventService) {
@@ -17,7 +18,7 @@ public class PromotionEventConsumerKafka implements PromotionEventConsumer{
 	}
 
 	@Override
-	@KafkaListener(topics = "promotion_event")
+	@KafkaListener(topics = TOPIC)
 	public void promotionEventJoinConsumer(EventJoinMessage message) {
 		switch (message.getPromotionKey()){
 			case SUMMER_EVENT:

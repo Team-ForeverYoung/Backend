@@ -13,7 +13,8 @@ import com.java.backend.global.kafka.KafkaProducerUtil;
 
 @Component
 public class PromotionEventProducerKafka implements PromotionEventProducer{
-
+	//토픽
+	private static final String TOPIC = "promotion_event";
 	private final KafkaProducerUtil kafkaProducerUtil;
 	private final ObjectMapper objectMapper;
 	private static final Logger log = LoggerFactory.getLogger(PromotionEventProducerKafka.class);
@@ -29,7 +30,7 @@ public class PromotionEventProducerKafka implements PromotionEventProducer{
 		try {
 			String value = objectMapper.writeValueAsString(eventJoinMessage.getEventJoinRequestDto());
 			String key = String.valueOf(eventJoinMessage.getEventJoinRequestDto().getUserId());
-			kafkaProducerUtil.send(eventJoinMessage.getPromotionKey(), key, value);
+			kafkaProducerUtil.send(TOPIC, key, value);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException("카프카 메시지 직렬화 오류", e);
 		}
