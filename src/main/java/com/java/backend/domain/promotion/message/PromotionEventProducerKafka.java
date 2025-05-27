@@ -16,25 +16,19 @@ public class PromotionEventProducerKafka implements PromotionEventProducer{
 	//토픽
 	private static final String TOPIC = "promotion_event";
 	private final KafkaProducerUtil kafkaProducerUtil;
-	private final ObjectMapper objectMapper;
 	private static final Logger log = LoggerFactory.getLogger(PromotionEventProducerKafka.class);
-	public PromotionEventProducerKafka(KafkaProducerUtil kafkaProducerUtil, ObjectMapper objectMapper) {
+	public PromotionEventProducerKafka(KafkaProducerUtil kafkaProducerUtil) {
 		this.kafkaProducerUtil = kafkaProducerUtil;
-		this.objectMapper = objectMapper;
 	}
 
 
 
 	@Override
 	public void promotionEventJoinProducer(EventJoinMessage eventJoinMessage) {
-		try {
-			String value = objectMapper.writeValueAsString(eventJoinMessage.getEventJoinRequestDto());
 			String key = eventJoinMessage.getPromotionKey();
-
+			EventJoinMessage value = eventJoinMessage;
 			kafkaProducerUtil.send(TOPIC, key, value);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException("카프카 메시지 직렬화 오류", e);
-		}
+
 	}
 
 }
