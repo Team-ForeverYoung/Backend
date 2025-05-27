@@ -4,9 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class EventJoinMessage {
-	private final EventJoinRequestDto eventJoinRequestDto;
-	private final String promotionKey;
+	private  EventJoinRequestDto eventJoinRequestDto;
+	private  String promotionKey;
 
+	public EventJoinMessage() {
+	}
 	public EventJoinMessage(EventJoinRequestDto eventJoinRequestDto, String promotionKey) {
 		this.eventJoinRequestDto = eventJoinRequestDto;
 		this.promotionKey = promotionKey;
