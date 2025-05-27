@@ -43,9 +43,12 @@ public class KafkaTemplateConfig {
 		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringDeserializer.class);
 		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, org.springframework.kafka.support.serializer.JsonDeserializer.class);
 
+
+		props.put("spring.json.value.default.type", "com.java.backend.domain.promotion.dto.EventJoinMessage");
+
 		JsonDeserializer<EventJoinMessage> deserializer = new JsonDeserializer<>(EventJoinMessage.class);
-		deserializer.addTrustedPackages("com.java.backend.domain.promotion.dto"); // 또는 "*"
-		deserializer.setRemoveTypeHeaders(false); // 헤더 유지
+		deserializer.addTrustedPackages("com.java.backend.domain.promotion.dto");
+		deserializer.setRemoveTypeHeaders(false);
 		deserializer.setUseTypeMapperForKey(false);
 
 		return new DefaultKafkaConsumerFactory<>(
@@ -54,6 +57,7 @@ public class KafkaTemplateConfig {
 			deserializer
 		);
 	}
+
 
 	@Bean
 	public ConcurrentKafkaListenerContainerFactory<String, EventJoinMessage> kafkaListenerContainerFactory() {
