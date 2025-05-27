@@ -18,7 +18,8 @@ public class PromotionEventConsumerKafka implements PromotionEventConsumer{
 	}
 
 	@Override
-	@KafkaListener(topics = TOPIC)
+	@KafkaListener(topics = TOPIC,
+		containerFactory = "kafkaListenerContainerFactory")
 	public void promotionEventJoinConsumer(EventJoinMessage message) {
 		switch (message.getPromotionKey()){
 			case SUMMER_EVENT:

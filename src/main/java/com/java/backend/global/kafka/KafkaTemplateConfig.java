@@ -3,12 +3,17 @@ package com.java.backend.global.kafka;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import com.java.backend.domain.promotion.dto.EventJoinMessage;
 @Configuration
@@ -29,4 +34,33 @@ public class KafkaTemplateConfig {
 	public KafkaTemplate<String, EventJoinMessage> eventJoinMessageKafkaTemplate() {
 		return new KafkaTemplate<>(eventJoinMessageProducerFactory());
 	}
+
+	@Bean
+	public ConsumerFactory<String, EventJoinMessage> consumerFactory() {
+		Map<String, Object> props = new HashMap<>();
+		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+		props.put(ConsumerConfig.GROUP_ID_CONFIG, "summer-event-group");
+		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringDeserializer.class);
+		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, org.springframework.kafka.support.serializer.JsonDeserializer.class);
+
+		JsonDeserializer<EventJoinMessage> deserializer = new JsonDeserializer<>(EventJoinMessage.class);
+		deserializer.addTrustedPackages("com.java.backend.domain.promotion.dto"); // 또는 "*"
+		deserializer.setRemoveTypeHeaders(false); // 헤더 유지
+		deserializer.setUseTypeMapperForKey(false);
+
+		return new DefaultKafkaConsumerFactory<>(
+			props,
+			new org.apache.kafka.common.serialization.StringDeserializer(),
+			deserializer
+		);
+	}
+
+	@Bean
+	public ConcurrentKafkaListenerContainerFactory<String, EventJoinMessage> kafkaListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, EventJoinMessage> factory =
+			new ConcurrentKafkaListenerContainerFactory<>();
+		factory.setConsumerFactory(consumerFactory());
+		return factory;
+	}
+
 }
