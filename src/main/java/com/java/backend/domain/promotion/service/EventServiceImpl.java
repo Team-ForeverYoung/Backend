@@ -2,12 +2,14 @@ package com.java.backend.domain.promotion.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.java.backend.domain.promotion.controller.EventController;
 import com.java.backend.domain.promotion.dto.EventCreateRequestDto;
 import com.java.backend.domain.promotion.dto.EventJoinMessage;
 import com.java.backend.domain.promotion.dto.EventJoinRequestDto;
+import com.java.backend.domain.promotion.dto.EventResultMessage;
 import com.java.backend.domain.promotion.dto.UserEventFactoryInput;
 import com.java.backend.domain.promotion.entity.Coupon;
 import com.java.backend.domain.promotion.entity.Event;
@@ -29,15 +31,17 @@ public class EventServiceImpl implements EventService {
 	private final StubUserRepository stubUserRepository;
 	private final UserEventRepoService userEventRepoService;
 	private final PromotionEventProducer promotionEventProducer;
+	private final ApplicationEventPublisher applicationEventPublisher;
 	private static final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
 	public EventServiceImpl(EventRepoService eventRepoService, CouponRepoService couponRepoService,
 		StubUserRepository stubUserRepository, UserEventRepoService userEventRepoService,
-		PromotionEventProducer promotionEventProducer) {
+		PromotionEventProducer promotionEventProducer, ApplicationEventPublisher applicationEventPublisher) {
 		this.eventRepoService = eventRepoService;
 		this.couponRepoService = couponRepoService;
 		this.stubUserRepository = stubUserRepository;
 		this.userEventRepoService = userEventRepoService;
 		this.promotionEventProducer = promotionEventProducer;
+		this.applicationEventPublisher = applicationEventPublisher;
 	}
 
 	@Override
@@ -54,14 +58,13 @@ public class EventServiceImpl implements EventService {
 		validateDuplicateJoin(dto.getUserId(), dto.getEventId());
 		Event event = getEventByEventId(dto.getEventId());
 		validateEventAmount(event);
-
 		Coupon coupon = event.getCoupon();
 		User user = getUserByUserId(dto.getUserId());
-		UserEventFactoryInput dtto = new UserEventFactoryInput(coupon, event, user);
-		UserEvent userEvent = UserEventFactory.createFromUserRequest(dtto);
-
-		event.subtractAmount(); // 더티체킹
-		return userEventRepoService.saveUserEvent(userEvent);
+		UserEvent userEvent = UserEventFactory.createFromUserRequest(new UserEventFactoryInput(coupon, event, user));
+		event.subtractAmount();
+		UserEvent savedUserEvent = userEventRepoService.saveUserEvent(userEvent);
+		applicationEventPublisher.publishEvent(new EventResultMessage(userEvent,true));
+		return savedUserEvent;
 	}
 
 	@Override
