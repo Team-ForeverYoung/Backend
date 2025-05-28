@@ -94,8 +94,6 @@ spec:
 		}
 		steps {
 			sh '''
-			npm install
-			npm run build
 			aws s3 sync ${DIST_DIR} s3://${S3_BUCKET}/ --region ${AWS_REGION} --delete
 			'''
 		}
