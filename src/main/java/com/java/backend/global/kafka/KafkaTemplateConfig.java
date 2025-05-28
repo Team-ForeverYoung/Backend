@@ -16,11 +16,13 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import com.java.backend.domain.promotion.dto.EventJoinMessage;
+import com.java.backend.domain.promotion.dto.EventResultMessage;
+
 @Configuration
 public class KafkaTemplateConfig {
 
 	private static final String BOOTSTRAP_SERVER = "kafka.kafka.svc.cluster.local:9092";
-
+	// eventJointMessage 프로듀서 및 템플릿
 	@Bean
 	public ProducerFactory<String, EventJoinMessage> eventJoinMessageProducerFactory() {
 		Map<String, Object> config = new HashMap<>();
@@ -34,7 +36,7 @@ public class KafkaTemplateConfig {
 	public KafkaTemplate<String, EventJoinMessage> eventJoinMessageKafkaTemplate() {
 		return new KafkaTemplate<>(eventJoinMessageProducerFactory());
 	}
-
+	// eventJointMessage 컨슈머
 	@Bean
 	public ConsumerFactory<String, EventJoinMessage> consumerFactory() {
 		Map<String, Object> props = new HashMap<>();
@@ -58,5 +60,18 @@ public class KafkaTemplateConfig {
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
+// eventResultMessage 프로듀서 및 템플릿
+	@Bean
+	public ProducerFactory<String, EventResultMessage> eventResultMessageProducerFactory(){
+		Map<String,Object> config = new HashMap<>();
+		config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
+		config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringSerializer.class);
+		config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, org.springframework.kafka.support.serializer.JsonSerializer.class);
+		return new DefaultKafkaProducerFactory<>(config);
+	}
 
+	@Bean
+	public KafkaTemplate<String, EventResultMessage> eventResultMessageKafkaTemplate() {
+		return new KafkaTemplate<>(eventResultMessageProducerFactory());
+	}
 }
