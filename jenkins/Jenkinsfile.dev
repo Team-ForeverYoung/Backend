@@ -93,9 +93,9 @@ spec:
 			DIST_DIR = 'dist' // 프론트 빌드 결과 디렉토리
 		}
 		steps {
-			sh '''
+			sh """
 			aws s3 sync ${DIST_DIR} s3://${S3_BUCKET}/ --region ${AWS_REGION} --delete
-			'''
+			"""
 		}
 	}
 
