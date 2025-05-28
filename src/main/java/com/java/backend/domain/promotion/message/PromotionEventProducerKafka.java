@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.backend.domain.promotion.dto.EventJoinMessage;
 import com.java.backend.domain.promotion.dto.EventJoinRequestDto;
 import com.java.backend.domain.promotion.dto.EventResultMessage;
-import com.java.backend.domain.promotion.service.EventServiceImpl;
 import com.java.backend.global.kafka.KafkaProducerUtil;
 
 @Component
