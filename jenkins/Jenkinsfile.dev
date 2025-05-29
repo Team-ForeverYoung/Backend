@@ -83,7 +83,6 @@ spec:
                 sh './gradlew clean'
                 sh './gradlew test'
                 sh './gradlew build --no-daemon'
-                sh 'aws s3 sync dist/ s3://www.foreveryoung.com/ --delete'
 	    }
         }
 
