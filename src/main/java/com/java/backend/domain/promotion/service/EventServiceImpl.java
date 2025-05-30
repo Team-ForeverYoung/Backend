@@ -63,7 +63,7 @@ public class EventServiceImpl implements EventService {
 		UserEvent userEvent = UserEventFactory.createFromUserRequest(new UserEventFactoryInput(coupon, event, user));
 		event.subtractAmount();
 		UserEvent savedUserEvent = userEventRepoService.saveUserEvent(userEvent);
-		applicationEventPublisher.publishEvent(new EventResultMessage(userEvent,true));
+		applicationEventPublisher.publishEvent(new EventResultMessage(userEvent, true, user.getName(), event.getEventName()));
 		return savedUserEvent;
 	}
 
