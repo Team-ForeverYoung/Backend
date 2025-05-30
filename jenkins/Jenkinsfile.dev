@@ -86,19 +86,6 @@ spec:
             }
         }
 	
-	stage('Upload Frontend to S3') {
-		environment {
-			AWS_REGION = 'ap-northeast-2'
-			S3_BUCKET = 'www.foreveryoungoliveyoung.com'
-			DIST_DIR = 'dist' // 프론트 빌드 결과 디렉토리
-		}
-		steps {
-			sh """
-			aws s3 sync ${DIST_DIR} s3://${S3_BUCKET}/ --region ${AWS_REGION} --delete
-			"""
-		}
-	}
-
         stage('Docker Buildx Build & Push') {
             steps {
                 sh '''
