@@ -55,24 +55,24 @@ public class EventServiceImpl implements EventService {
 	@Override
 	@Transactional
 	public UserEvent joinEvent(EventJoinRequestDto dto) {
-		Event event = null;
-		Coupon coupon = null;
-		User user = null;
-		UserEvent userEvent = null;
 		boolean success = false;
 		try{
 		validateDuplicateJoin(dto.getUserId(), dto.getEventId());
-		event = getEventByEventId(dto.getEventId());
+		Event event = getEventByEventId(dto.getEventId());
 		validateEventAmount(event);
-		coupon = event.getCoupon();
-		user = getUserByUserId(dto.getUserId());
-		userEvent = UserEventFactory.createFromUserRequest(new UserEventFactoryInput(coupon, event, user));
+		Coupon coupon = event.getCoupon();
+		User user = getUserByUserId(dto.getUserId());
+		UserEvent userEvent = UserEventFactory.createFromUserRequest(new UserEventFactoryInput(coupon, event, user));
 		event.subtractAmount();
 		UserEvent savedUserEvent = userEventRepoService.saveUserEvent(userEvent);
 		success=true;
+			applicationEventPublisher.publishEvent(EventResultMessage.success(userEvent, success, user.getName(), event.getEventName()));
 		return savedUserEvent;
-		}finally {
-			applicationEventPublisher.publishEvent(new EventResultMessage(userEvent, success, user.getName(), event.getEventName()));
+		}catch (Exception e){
+			User user = getUserByUserId(dto.getUserId());
+			Event event = getEventByEventId(dto.getEventId());
+			applicationEventPublisher.publishEvent(EventResultMessage.fail(success, user.getId(), user.getName(), event.getId(), event.getEventName()));
+			throw e;
 		}
 	}
 
@@ -93,12 +93,14 @@ public class EventServiceImpl implements EventService {
 	private void validateDuplicateJoin(Long userId, Long eventId) {
 		boolean isExist = userEventRepoService.isExistUserEvent(userId, eventId);
 		if (isExist) {
+			log.error("중복참여 입니다");
 			throw new IllegalStateException("중복참여 입니다.");
 		}
 	}
 
 	private void validateEventAmount(Event event) {
 		if (event.getAmount() <= 0) {
+			log.error("수량 소진 입니다.");
 			throw new IllegalStateException("이벤트 수량이 부족합니다.");
 		}
 	}

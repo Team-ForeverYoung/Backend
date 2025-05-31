@@ -27,10 +27,6 @@ public class EventController {
 
 	@PostMapping
 	public ResponseEntity<ResponseApiCode> join(@RequestBody EventJoinRequestDto dto){
-		log.info("EventJoinRequestDto: {}", "해치웠나");
-		log.debug("EventJoinRequestDto: {}", dto);
-		log.debug("eventId: {}", dto.getEventId());
-		log.debug("userId: {}", dto.getUserId());
 		eventService.publishEventJoin(dto);
 		RestApiResponse restApiResponse = new RestApiResponse(PromotionCode.USER_EVENT_CREATED_SUCCESS);
 		return ResponseEntity.ok(restApiResponse);

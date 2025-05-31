@@ -21,7 +21,6 @@ public class KafkaProducerUtil {
 
 	public void sendEventJoinMessage(String topic, String key, EventJoinMessage value) {
 		CompletableFuture<SendResult<String,EventJoinMessage>> future = eventJoinKafkaTemplate.send(topic, key, value );
-
 		future.whenComplete((result, ex) -> {
 			if (ex == null) {
 				System.out.println("성공");

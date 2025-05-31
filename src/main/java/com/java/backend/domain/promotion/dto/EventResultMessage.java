@@ -13,7 +13,7 @@ public class EventResultMessage {
 	private final String userName;
 	private final String eventName;
 
-	public EventResultMessage(boolean success, Long userId, Long eventId, String userName, String eventName) {
+	private EventResultMessage(boolean success, Long userId, Long eventId, String userName, String eventName) {
 		this.success = success;
 		this.userId = userId;
 		this.eventId = eventId;
@@ -21,11 +21,11 @@ public class EventResultMessage {
 		this.eventName = eventName;
 	}
 
-	public EventResultMessage(UserEvent userEvent, boolean success, String userName, String eventName){
-		this.success = success;
-		this.userId = userEvent.getUser().getId();
-		this.eventId = userEvent.getEvent().getId();
-		this.userName = userName;
-		this.eventName = eventName;
+	public static EventResultMessage success(UserEvent userEvent, boolean success, String userName, String eventName){
+		return new EventResultMessage(success, userEvent.getId(), userEvent.getId(), userName, eventName);
+	}
+
+	public static EventResultMessage fail(boolean fail, Long userId,String userName, Long eventId, String eventName){
+		return new EventResultMessage(fail, userId, eventId, userName, eventName);
 	}
 }
