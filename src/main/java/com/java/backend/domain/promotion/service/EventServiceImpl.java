@@ -55,16 +55,25 @@ public class EventServiceImpl implements EventService {
 	@Override
 	@Transactional
 	public UserEvent joinEvent(EventJoinRequestDto dto) {
+		Event event = null;
+		Coupon coupon = null;
+		User user = null;
+		UserEvent userEvent = null;
+		boolean success = false;
+		try{
 		validateDuplicateJoin(dto.getUserId(), dto.getEventId());
-		Event event = getEventByEventId(dto.getEventId());
+		event = getEventByEventId(dto.getEventId());
 		validateEventAmount(event);
-		Coupon coupon = event.getCoupon();
-		User user = getUserByUserId(dto.getUserId());
-		UserEvent userEvent = UserEventFactory.createFromUserRequest(new UserEventFactoryInput(coupon, event, user));
+		coupon = event.getCoupon();
+		user = getUserByUserId(dto.getUserId());
+		userEvent = UserEventFactory.createFromUserRequest(new UserEventFactoryInput(coupon, event, user));
 		event.subtractAmount();
 		UserEvent savedUserEvent = userEventRepoService.saveUserEvent(userEvent);
-		applicationEventPublisher.publishEvent(new EventResultMessage(userEvent, true, user.getName(), event.getEventName()));
+		success=true;
 		return savedUserEvent;
+		}finally {
+			applicationEventPublisher.publishEvent(new EventResultMessage(userEvent, success, user.getName(), event.getEventName()));
+		}
 	}
 
 	@Override
