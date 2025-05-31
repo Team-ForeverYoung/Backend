@@ -67,6 +67,7 @@ public class KafkaTemplateConfig {
 		config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
 		config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringSerializer.class);
 		config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, org.springframework.kafka.support.serializer.JsonSerializer.class);
+		config.put("spring.json.type.mapping", "EventResultMessage:com.java.backend.domain.promotion.dto.EventResultMessage");
 		return new DefaultKafkaProducerFactory<>(config);
 	}
 
