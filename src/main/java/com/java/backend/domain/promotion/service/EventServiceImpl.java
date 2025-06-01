@@ -71,15 +71,9 @@ public class EventServiceImpl implements EventService {
 		}catch (Exception e){
 			User user = getUserByUserId(dto.getUserId());
 			Event event = getEventByEventId(dto.getEventId());
-			applicationEventPublisher.publishEvent(EventResultMessage.fail(success, user.getId(), user.getName(), event.getId(), event.getEventName()));
+			promotionEventProducer.promotionResultProducer(EventResultMessage.fail(success, user.getId(), user.getName(), event.getId(), event.getEventName()));
 			throw e;
 		}
-	}
-
-	@Override
-	public boolean isJoined(Long userId, Long eventId) {
-		// 구현 필요
-		return false;
 	}
 
 	@Override
@@ -89,6 +83,10 @@ public class EventServiceImpl implements EventService {
 		EventJoinMessage eventJoinMessage = new EventJoinMessage(dto,promotionKey);
 		promotionEventProducer.promotionEventJoinProducer(eventJoinMessage);
 	}
+
+
+
+
 
 	private void validateDuplicateJoin(Long userId, Long eventId) {
 		boolean isExist = userEventRepoService.isExistUserEvent(userId, eventId);
