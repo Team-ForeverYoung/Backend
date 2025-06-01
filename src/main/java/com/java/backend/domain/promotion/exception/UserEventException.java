@@ -14,4 +14,16 @@ public abstract class UserEventException extends BusinessException {
 			super(exceptionMetaData);
 		}
 	}
+
+	public static class UserEventDuplicatedException extends UserEventException{
+		public UserEventDuplicatedException(ExceptionMetaData exceptionMetaData) {
+			super(exceptionMetaData);
+		}
+	}
+
+	public static class UserEventSoldedOut extends UserEventException{
+		public UserEventSoldedOut(ExceptionMetaData exceptionMetaData) {
+			super(exceptionMetaData);
+		}
+	}
 }
