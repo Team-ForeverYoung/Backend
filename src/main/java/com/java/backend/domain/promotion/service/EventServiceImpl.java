@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import com.java.backend.domain.promotion.code.PromotionErrorCode;
 import com.java.backend.domain.promotion.controller.EventController;
 import com.java.backend.domain.promotion.dto.EventCreateRequestDto;
 import com.java.backend.domain.promotion.dto.EventJoinMessage;
@@ -14,6 +15,7 @@ import com.java.backend.domain.promotion.dto.UserEventFactoryInput;
 import com.java.backend.domain.promotion.entity.Coupon;
 import com.java.backend.domain.promotion.entity.Event;
 import com.java.backend.domain.promotion.entity.UserEvent;
+import com.java.backend.domain.promotion.exception.UserEventException;
 import com.java.backend.domain.promotion.factory.EventFactory;
 import com.java.backend.domain.promotion.factory.UserEventFactory;
 import com.java.backend.domain.promotion.message.PromotionEventProducer;
@@ -22,6 +24,7 @@ import com.java.backend.domain.promotion.repository.EventRepoService;
 import com.java.backend.domain.promotion.repository.UserEventRepoService;
 import com.java.backend.domain.promotion.stub.StubUserRepository;
 import com.java.backend.domain.user.entity.User;
+import com.java.backend.global.exception.ExceptionMetaData;
 
 import jakarta.transaction.Transactional;
 @Service
@@ -68,12 +71,15 @@ public class EventServiceImpl implements EventService {
 		success=true;
 			applicationEventPublisher.publishEvent(EventResultMessage.success(userEvent, success, user.getName(), event.getEventName()));
 		return savedUserEvent;
-		}catch (Exception e){
+		}catch (UserEventException e){
 			User user = getUserByUserId(dto.getUserId());
 			Event event = getEventByEventId(dto.getEventId());
 			promotionEventProducer.promotionResultProducer(EventResultMessage.fail(success, user.getId(), user.getName(), event.getId(), event.getEventName()));
+		}catch (Exception e) {
 			throw e;
+			// ToDo: 비즈니스 예외 발고 시스템 예외에 대해 처리 할 방법 생각하기.
 		}
+		return null;
 	}
 
 	@Override
@@ -91,15 +97,21 @@ public class EventServiceImpl implements EventService {
 	private void validateDuplicateJoin(Long userId, Long eventId) {
 		boolean isExist = userEventRepoService.isExistUserEvent(userId, eventId);
 		if (isExist) {
-			log.error("중복참여 입니다");
-			throw new IllegalStateException("중복참여 입니다.");
+			ExceptionMetaData exceptionMetaData = ExceptionMetaData.builder()
+				.className(null)
+				.stackTrace(null)
+				.responseApiCode(PromotionErrorCode.EVENT_DUPLICATED_JOIN).build();
+			throw new UserEventException.UserEventDuplicatedException(exceptionMetaData);
 		}
 	}
 
 	private void validateEventAmount(Event event) {
 		if (event.getAmount() <= 0) {
-			log.error("수량 소진 입니다.");
-			throw new IllegalStateException("이벤트 수량이 부족합니다.");
+			ExceptionMetaData exceptionMetaData = ExceptionMetaData.builder()
+				.className(null)
+				.stackTrace(null)
+				.responseApiCode(PromotionErrorCode.THIS_EVENT_IS_SOLD_OUT).build();
+			throw new UserEventException.UserEventSoldedOut(exceptionMetaData);
 		}
 	}
 
