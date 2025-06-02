@@ -1,0 +1,3 @@
+spring:
+  profiles:
+    active: kr  # 필요 시 us로 변경 (혹은 실행 시 --spring.profiles.active=us)
