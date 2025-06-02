@@ -1,6 +1,8 @@
 package com.java.backend.domain.promotion.dto;
 
+import com.java.backend.domain.promotion.entity.Event;
 import com.java.backend.domain.promotion.entity.UserEvent;
+import com.java.backend.domain.user.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,11 +23,11 @@ public class EventResultMessage {
 		this.eventName = eventName;
 	}
 
-	public static EventResultMessage success(UserEvent userEvent, boolean success, String userName, String eventName){
-		return new EventResultMessage(success, userEvent.getId(), userEvent.getId(), userName, eventName);
+	public static EventResultMessage success(UserEvent userEvent, boolean success){
+		return new EventResultMessage(success, userEvent.getId(), userEvent.getId(), userEvent.getUser().getName(), userEvent.getEvent().getEventName());
 	}
 
-	public static EventResultMessage fail(boolean fail, Long userId,String userName, Long eventId, String eventName){
-		return new EventResultMessage(fail, userId, eventId, userName, eventName);
+	public static EventResultMessage fail(boolean fail, User user, Event event){
+		return new EventResultMessage(fail, user.getId(), event.getId(), user.getName(), event.getEventName());
 	}
 }
