@@ -44,7 +44,7 @@ public class EventOutboxFactory {
 	}
 
 	private OutboxEvent createOutbox(String key, String value, KafkaTopic topic, OutBoxStatus status){
-		return OutboxEvent.builder().topic(topic.getTopic()).key(key).payload(value).status(status).createdAt(
+		return OutboxEvent.builder().topic(topic.getTopic()).messageKey(key).payload(value).status(status).createdAt(
 			LocalDateTime.now()).build();
 	}
 
