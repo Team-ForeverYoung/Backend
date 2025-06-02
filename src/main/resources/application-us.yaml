@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:mysql://foreveryoungdb-us-east-1-cluster-1.cluster-ro-c6lsgsgq006k.us-east-1.rds.amazonaws.com/test
+    username: ${AURORA_USERNAME}
+    password: ${AURORA_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-init-sql: SET aurora_replica_read_consistency='GLOBAL'  # 추가: 쓰기 전달 위한 세션 일관성 설정
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+
+cloud:
+  aws:
+    region:
+      static: us-east-1
+    stack:
+      auto: false
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+
