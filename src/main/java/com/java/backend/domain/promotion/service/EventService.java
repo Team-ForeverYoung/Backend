@@ -7,7 +7,7 @@ import com.java.backend.domain.promotion.entity.UserEvent;
 
 public interface EventService {
 	public Event createEvent(EventCreateRequestDto dto);
-	public UserEvent joinEvent(EventJoinRequestDto dto);
+	public void joinEvent(EventJoinRequestDto dto);
 	public void publishEventJoin(EventJoinRequestDto dto);
 
 }
