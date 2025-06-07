@@ -10,7 +10,7 @@ import com.java.backend.domain.promotion.service.EventService;
 @Component
 public class PromotionEventConsumerKafka implements PromotionEventConsumer{
 	private final EventService eventService;
-	private static final String TOPIC = "promotion_event";
+	private static final String TOPIC = "forever_mysql_db.forever_mysql_db.outbox_event";
 	private static final String SUMMER_EVENT = "SummerEvent";
 
 	public PromotionEventConsumerKafka(EventService eventService) {
