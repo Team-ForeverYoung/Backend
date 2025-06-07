@@ -22,10 +22,10 @@ public class PromotionEventConsumerKafka implements PromotionEventConsumer {
 	@Override
 	@KafkaListener(topics = TOPIC,
 		containerFactory = "kafkaListenerContainerFactory")
-	public void promotionEventJoinConsumer(String message) {
+	public void promotionEventJoinConsumer(EventJoinMessage message) {
 		try {
-			EventJoinMessage eventJoinMessage = objectMapper.readValue(message, EventJoinMessage.class);
-			switch (eventJoinMessage.getPromotionKey()) {
+			// EventJoinMessage eventJoinMessage = objectMapper.readValue(message, EventJoinMessage.class);
+			switch (message.getPromotionKey()) {
 				case SUMMER_EVENT:
 					// eventService.joinEvent(eventJoinMessage.getEventJoinRequestDto());
 					break;
