@@ -27,7 +27,7 @@ public class PromotionEventConsumerKafka implements PromotionEventConsumer {
 			EventJoinMessage eventJoinMessage = objectMapper.readValue(message, EventJoinMessage.class);
 			switch (eventJoinMessage.getPromotionKey()) {
 				case SUMMER_EVENT:
-					eventService.joinEvent(eventJoinMessage.getEventJoinRequestDto());
+					// eventService.joinEvent(eventJoinMessage.getEventJoinRequestDto());
 					break;
 				default:
 					break;
