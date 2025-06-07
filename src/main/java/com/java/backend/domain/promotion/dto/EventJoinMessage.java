@@ -1,8 +1,10 @@
 package com.java.backend.domain.promotion.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class EventJoinMessage {
 	private  EventJoinRequestDto eventJoinRequestDto;
 	private  String promotionKey;

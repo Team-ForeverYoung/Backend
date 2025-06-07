@@ -6,8 +6,9 @@ import com.java.backend.domain.user.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-
+@Setter
 public class EventJoinRequestDto {
 	// 클라이언트로 부터의 요청
 	private  Long eventId;
