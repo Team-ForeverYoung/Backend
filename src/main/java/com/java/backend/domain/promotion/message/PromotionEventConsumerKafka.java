@@ -16,7 +16,7 @@ import com.java.backend.domain.promotion.util.OutboxMessageParser;
 public class PromotionEventConsumerKafka implements PromotionEventConsumer {
 	private final EventService eventService;
 	private final OutboxMessageParser outboxMessageParser;
-	private static final String TOPIC = "forever_mysql_db.forever_mysql_db.outbox_event";
+	private static final String TOPIC = "promotion_event";
 	private static final String SUMMER_EVENT = "SummerEvent";
 	private static final Logger log = LoggerFactory.getLogger(PromotionEventConsumerKafka.class);
 	public PromotionEventConsumerKafka(EventService eventService, OutboxMessageParser outboxMessageParser) {
