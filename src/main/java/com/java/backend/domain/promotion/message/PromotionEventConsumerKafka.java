@@ -5,18 +5,21 @@ import org.springframework.stereotype.Component;
 
 import com.java.backend.domain.promotion.dto.EventJoinMessage;
 import com.java.backend.domain.promotion.dto.EventJoinRequestDto;
+import com.java.backend.domain.promotion.dto.OutboxBase;
 import com.java.backend.domain.promotion.service.EventService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.java.backend.domain.promotion.util.OutboxMessageParser;
 
 @Component
 public class PromotionEventConsumerKafka implements PromotionEventConsumer {
 	private final EventService eventService;
+	private final OutboxMessageParser outboxMessageParser;
 	private static final String TOPIC = "forever_mysql_db.forever_mysql_db.outbox_event";
 	private static final String SUMMER_EVENT = "SummerEvent";
-	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	public PromotionEventConsumerKafka(EventService eventService) {
+	public PromotionEventConsumerKafka(EventService eventService, OutboxMessageParser outboxMessageParser) {
 		this.eventService = eventService;
+		this.outboxMessageParser = outboxMessageParser;
 	}
 
 	@Override
@@ -24,8 +27,10 @@ public class PromotionEventConsumerKafka implements PromotionEventConsumer {
 		containerFactory = "kafkaListenerContainerFactory")
 	public void promotionEventJoinConsumer(String message) {
 		try {
-			EventJoinMessage eventJoinMessage = objectMapper.readValue(message, EventJoinMessage.class);
-			switch (eventJoinMessage.getPromotionKey()) {
+
+			OutboxBase outbox = outboxMessageParser.outboxParser(message);
+			EventJoinMessage eventJoinMessage = outboxMessageParser.eventJoinMessageParser(message);
+			switch (outbox.getMessageKey()) {
 				case SUMMER_EVENT:
 					eventService.joinEvent(eventJoinMessage.getEventJoinRequestDto());
 					break;
