@@ -13,5 +13,18 @@ public class OutboxBase {
 	private String messageKey;
 	private String payload;
 	private OutBoxStatus status;
+
+	@Override
+	public String toString() {
+		return "OutboxBase{" +
+			"id=" + id +
+			", createdAt=" + createdAt +
+			", messageKey='" + messageKey + '\'' +
+			", payload='" + payload + '\'' +
+			", status=" + status +
+			", topic='" + topic + '\'' +
+			'}';
+	}
+
 	private String topic;
 }

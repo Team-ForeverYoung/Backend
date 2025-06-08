@@ -31,6 +31,7 @@ public class PromotionEventConsumerKafka implements PromotionEventConsumer {
 			log.info("Message Receive");
 			log.info(message);
 			OutboxBase outbox = outboxMessageParser.outboxParser(message);
+
 			EventJoinMessage eventJoinMessage = outboxMessageParser.eventJoinMessageParser(message);
 			switch (outbox.getMessageKey()) {
 				case SUMMER_EVENT:
