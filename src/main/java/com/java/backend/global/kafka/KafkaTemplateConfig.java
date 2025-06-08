@@ -38,7 +38,7 @@ public class KafkaTemplateConfig {
 	}
 	// eventJointMessage 컨슈머
 	@Bean
-	public ConsumerFactory<String, EventJoinMessage> consumerFactory() {
+	public ConsumerFactory<String, EventJoinMessage> eventJoinMessageConsumerFactory() {
 		Map<String, Object> props = new HashMap<>();
 		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, "summer-event-group");
@@ -51,13 +51,31 @@ public class KafkaTemplateConfig {
 		return new DefaultKafkaConsumerFactory<>(props);
 	}
 
-
-
 	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, EventJoinMessage> kafkaListenerContainerFactory() {
+	public ConcurrentKafkaListenerContainerFactory<String, EventJoinMessage> eventJoinMessageListenerContainerFactory() {
 		ConcurrentKafkaListenerContainerFactory<String, EventJoinMessage> factory =
 			new ConcurrentKafkaListenerContainerFactory<>();
-		factory.setConsumerFactory(consumerFactory());
+		factory.setConsumerFactory(eventJoinMessageConsumerFactory());
+		return factory;
+	}
+
+// eventJointMessage 컨슈머 ====> Outbox Message 컨슈머
+// MeMo: 리스너에서 명시적으로 팩토리를 지정해주지 않아도
+	// ConcurrentKafkaListenerContainerFactory가 1개라도 정의 되어 있다면, 기본설정(application.properties)을 덮어씌우는 현상때문에 추가
+
+	@Bean
+	public ConsumerFactory<String, String> outboxMessageConsumerFactory(){
+		Map<String,Object> config = new HashMap<>();
+		config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
+		config.put(ConsumerConfig.GROUP_ID_CONFIG, "summer-event-group");
+		config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringDeserializer.class);
+		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringDeserializer.class);
+		return new DefaultKafkaConsumerFactory<>(config);
+	}
+
+	@Bean ConcurrentKafkaListenerContainerFactory<String,String> outboxMessageListenerContainerFactory(){
+		ConcurrentKafkaListenerContainerFactory<String,String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+		factory.setConsumerFactory(outboxMessageConsumerFactory());
 		return factory;
 	}
 // eventResultMessage 프로듀서 및 템플릿
