@@ -37,29 +37,29 @@ public class KafkaTemplateConfig {
 		return new KafkaTemplate<>(eventJoinMessageProducerFactory());
 	}
 	// eventJointMessage 컨슈머
-	@Bean
-	public ConsumerFactory<String, EventJoinMessage> consumerFactory() {
-		Map<String, Object> props = new HashMap<>();
-		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
-		props.put(ConsumerConfig.GROUP_ID_CONFIG, "summer-event-group");
-		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringDeserializer.class);
-		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, org.springframework.kafka.support.serializer.JsonDeserializer.class);
-
-		props.put("spring.json.value.default.type", "com.java.backend.domain.promotion.dto.EventJoinMessage");
-		props.put("spring.json.trusted.packages", "com.java.backend.domain.promotion.dto");
-
-		return new DefaultKafkaConsumerFactory<>(props);
-	}
-
-
-
-	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, EventJoinMessage> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, EventJoinMessage> factory =
-			new ConcurrentKafkaListenerContainerFactory<>();
-		factory.setConsumerFactory(consumerFactory());
-		return factory;
-	}
+	// @Bean
+	// public ConsumerFactory<String, EventJoinMessage> consumerFactory() {
+	// 	Map<String, Object> props = new HashMap<>();
+	// 	props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
+	// 	props.put(ConsumerConfig.GROUP_ID_CONFIG, "summer-event-group");
+	// 	props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringDeserializer.class);
+	// 	props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, org.springframework.kafka.support.serializer.JsonDeserializer.class);
+	//
+	// 	props.put("spring.json.value.default.type", "com.java.backend.domain.promotion.dto.EventJoinMessage");
+	// 	props.put("spring.json.trusted.packages", "com.java.backend.domain.promotion.dto");
+	//
+	// 	return new DefaultKafkaConsumerFactory<>(props);
+	// }
+	//
+	//
+	//
+	// @Bean
+	// public ConcurrentKafkaListenerContainerFactory<String, EventJoinMessage> kafkaListenerContainerFactory() {
+	// 	ConcurrentKafkaListenerContainerFactory<String, EventJoinMessage> factory =
+	// 		new ConcurrentKafkaListenerContainerFactory<>();
+	// 	factory.setConsumerFactory(consumerFactory());
+	// 	return factory;
+	// }
 // eventResultMessage 프로듀서 및 템플릿
 	@Bean
 	public ProducerFactory<String, EventResultMessage> eventResultMessageProducerFactory(){
