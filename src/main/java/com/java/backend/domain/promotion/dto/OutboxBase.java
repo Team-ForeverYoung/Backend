@@ -11,23 +11,13 @@ import lombok.Getter;
 public class OutboxBase {
 	private Long id;
 	@Column(name = "created_at")
-	private Long createdAt;
+	private Long created_at;
 	@Column(name = "message_key")
-	private String messageKey;
+	private String message_key;
 	private String payload;
 	private OutBoxStatus status;
 
-	@Override
-	public String toString() {
-		return "OutboxBase{" +
-			"id=" + id +
-			", createdAt=" + createdAt +
-			", messageKey='" + messageKey + '\'' +
-			", payload='" + payload + '\'' +
-			", status=" + status +
-			", topic='" + topic + '\'' +
-			'}';
-	}
+
 
 	private String topic;
 }
