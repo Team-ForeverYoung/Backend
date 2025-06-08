@@ -23,11 +23,9 @@ public class PromotionEventConsumerKafka implements PromotionEventConsumer {
 	}
 
 	@Override
-	@KafkaListener(topics = TOPIC,
-		containerFactory = "kafkaListenerContainerFactory")
+	@KafkaListener(topics = TOPIC)
 	public void promotionEventJoinConsumer(String message) {
 		try {
-
 			OutboxBase outbox = outboxMessageParser.outboxParser(message);
 			EventJoinMessage eventJoinMessage = outboxMessageParser.eventJoinMessageParser(message);
 			switch (outbox.getMessageKey()) {
