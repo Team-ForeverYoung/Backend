@@ -49,6 +49,7 @@ public class EventJoinService {
 			Coupon coupon = event.getCoupon();
 			UserEvent userEvent = UserEventFactory.createFromUserRequest(new UserEventFactoryInput(coupon, event, user));
 			event.subtractAmount();
+			saveUserEvent(userEvent);
 			outboxRepoService.saveEvent(eventOutboxFactory.createEventResultSuccessOutbox(userEvent, true));
 		}catch (Exception e) {
 			User user = getUserByUserId(dto.getUserId());
@@ -79,6 +80,9 @@ public class EventJoinService {
 		return couponRepoService.getCoupon(couponId);
 	}
 
+	private void saveUserEvent(UserEvent userEvent){
+		userEventRepoService.saveUserEvent(userEvent);
+	}
 
 	//--------------------------- 검증 ------------------------------
 	private void validateDuplicateJoin(Long userId, Long eventId) {

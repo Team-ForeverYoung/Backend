@@ -28,8 +28,6 @@ public class PromotionEventConsumerKafka implements PromotionEventConsumer {
 	@KafkaListener(topics = TOPIC, containerFactory = "outboxMessageListenerContainerFactory")
 	public void promotionEventJoinConsumer(String message) {
 		try {
-			log.info("Message Receive");
-			log.info(message);
 			OutboxBase outbox = outboxMessageParser.outboxParser(message);
 			EventJoinMessage eventJoinMessage = outboxMessageParser.eventJoinMessageParser(message);
 			switch (outbox.getMessage_key()) {
