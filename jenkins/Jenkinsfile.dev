@@ -83,7 +83,7 @@ spec:
                 sh './gradlew clean'
                 sh './gradlew test'
                 sh './gradlew build --no-daemon'
-            }
+	    }
         }
 	
         stage('Docker Buildx Build & Push') {
