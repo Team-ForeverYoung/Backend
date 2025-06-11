@@ -85,7 +85,7 @@ spec:
                 sh './gradlew build --no-daemon'
 	    }
         }
-
+	
         stage('Docker Buildx Build & Push') {
             steps {
                 sh '''
