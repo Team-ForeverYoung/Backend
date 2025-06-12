@@ -14,6 +14,7 @@ public interface OliveUserRepository extends JpaRepository<User, String> {
     @Query("SELECT u.passWord FROM User u WHERE u.userId = :userId")
     String findPassWordByUserId(@Param("userId") String userId);
 
+    @Query("SELECT u FROM User u WHERE u.id = :userId")
     Optional<User> findByUserPk(Long userId);
 
     @Modifying
