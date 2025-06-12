@@ -2,6 +2,7 @@ package com.java.backend.domain.promotion.service.join;
 
 import org.springframework.stereotype.Component;
 
+import com.java.backend.domain.member.user.repository.OliveUserRepository;
 import com.java.backend.domain.promotion.code.PromotionErrorCode;
 import com.java.backend.domain.promotion.dto.EventJoinMessage;
 import com.java.backend.domain.promotion.dto.EventJoinRequestDto;
@@ -11,13 +12,12 @@ import com.java.backend.domain.promotion.entity.Event;
 import com.java.backend.domain.promotion.entity.UserEvent;
 import com.java.backend.domain.promotion.exception.UserEventException;
 import com.java.backend.domain.promotion.factory.UserEventFactory;
-import com.java.backend.domain.promotion.message.PromotionEventProducer;
 import com.java.backend.domain.promotion.repository.CouponRepoService;
 import com.java.backend.domain.promotion.repository.EventRepoService;
 import com.java.backend.domain.promotion.repository.UserEventRepoService;
 import com.java.backend.domain.promotion.factory.EventOutboxFactory;
 import com.java.backend.domain.promotion.stub.StubUserRepository;
-import com.java.backend.domain.user.entity.User;
+import com.java.backend.domain.member.user.entity.User;
 import com.java.backend.global.exception.ExceptionMetaData;
 import com.java.backend.global.kafka.OutboxRepoService;
 
@@ -25,16 +25,15 @@ import com.java.backend.global.kafka.OutboxRepoService;
 public class EventJoinService {
 	private final EventRepoService eventRepoService;
 	private final CouponRepoService couponRepoService;
-	private final StubUserRepository stubUserRepository;
+	private final OliveUserRepository oliveUserRepository;
 	private final UserEventRepoService userEventRepoService;
 	private final EventOutboxFactory eventOutboxFactory;
 	private final OutboxRepoService outboxRepoService;
-	public EventJoinService(EventRepoService eventRepoService, CouponRepoService couponRepoService,
-		StubUserRepository stubUserRepository, UserEventRepoService userEventRepoService,
+	public EventJoinService(EventRepoService eventRepoService, CouponRepoService couponRepoService, OliveUserRepository oliveUserRepository, UserEventRepoService userEventRepoService,
 		EventOutboxFactory eventOutboxFactory, OutboxRepoService outboxRepoService) {
 		this.eventRepoService = eventRepoService;
 		this.couponRepoService = couponRepoService;
-		this.stubUserRepository = stubUserRepository;
+		this.oliveUserRepository = oliveUserRepository;
 		this.userEventRepoService = userEventRepoService;
 		this.eventOutboxFactory = eventOutboxFactory;
 		this.outboxRepoService = outboxRepoService;
@@ -68,7 +67,7 @@ public class EventJoinService {
 
 	//--------------------------- 유틸 ----------------------------
 	private User getUserByUserId(Long userId) {
-		return stubUserRepository.findById(userId).orElseThrow();
+		return oliveUserRepository.findByUserId2(userId).orElseThrow();
 	}
 
 	private Event getEventByEventId(Long eventId) {
