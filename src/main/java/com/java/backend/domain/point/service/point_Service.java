@@ -23,22 +23,24 @@ public class point_Service {
 
     // 미국 리전: SQS 없이 바로 Aurora에 저장 (Write Forwarding 사용)
     public void saveSingleOrder(point_Dto dto) {
-        point_OrderItem item = point_OrderItem.builder()
-                .point(dto.getPoint())
-                .orderId("US-" + UUID.randomUUID())  // 미국 리전용 접두어
-                .build();
-
-        repository.save(item); // Aurora로 직접 저장 (Write Forwarding 경유)
+        // point_OrderItem item = point_OrderItem.builder()
+        //         .point(dto.getPoint())
+        //         .orderId("US-" + UUID.randomUUID())  // 미국 리전용 접두어
+        //         .build();
+        //
+        // repository.save(item); // Aurora로 직접 저장 (Write Forwarding 경유)
+        System.out.println(dto.toString());
     }
 
     // 한국 리전: Aurora에 직접 저장
     public void saveDirectToAurora(point_Dto dto) {
-        point_OrderItem item = point_OrderItem.builder()
-                .point(dto.getPoint())
-                .orderId("KR-" + UUID.randomUUID())  // 한국 리전용 접두어
-                .build();
-
-        repository.save(item);
+        // point_OrderItem item = point_OrderItem.builder()
+        //         .point(dto.getPoint())
+        //         .orderId("KR-" + UUID.randomUUID())  // 한국 리전용 접두어
+        //         .build();
+        //
+        // repository.save(item);
+        System.out.println(dto.toString());
     }
 
     // 전체 주문 목록 반환 (GET 요청용)

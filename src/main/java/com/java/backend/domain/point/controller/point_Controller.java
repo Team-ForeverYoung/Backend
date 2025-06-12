@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/point")
+@RequestMapping("/api/v1/point")
 @RequiredArgsConstructor
 public class point_Controller {
 
