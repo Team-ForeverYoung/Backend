@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(String userId, String passWord) {
-        User user = oliveUserRepository.findByUserId(userId)
+        User user = oliveUserRepository.findByUserId(Long.valueOf(userId))
                 .orElseThrow(() -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
 
         if (!user.getPassWord().equals(passWord)) {

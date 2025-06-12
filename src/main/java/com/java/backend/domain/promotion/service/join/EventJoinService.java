@@ -67,7 +67,7 @@ public class EventJoinService {
 
 	//--------------------------- 유틸 ----------------------------
 	private User getUserByUserId(Long userId) {
-		return oliveUserRepository.findByUserId2(userId).orElseThrow();
+		return oliveUserRepository.findByUserId(userId).orElseThrow();
 	}
 
 	private Event getEventByEventId(Long eventId) {
