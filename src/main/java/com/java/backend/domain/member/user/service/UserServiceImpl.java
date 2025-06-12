@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(String userId, String passWord) {
-        User user = oliveUserRepository.findByUserId(Long.valueOf(userId))
+        User user = oliveUserRepository.findByUserPk(Long.valueOf(userId))
                 .orElseThrow(() -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
 
         if (!user.getPassWord().equals(passWord)) {
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     private User createUserFromDto(UserRegisterRequestDto dto) {
         return User.builder()
-                .userId(dto.getUserId()) // 사용자 ID 설정
+                .userId(dto.getUserId())
                 .name(dto.getName())
                 .email(dto.getEmail())
                 .passWord(dto.getPassWord())

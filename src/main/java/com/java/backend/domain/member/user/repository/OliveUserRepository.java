@@ -11,9 +11,10 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface OliveUserRepository extends JpaRepository<User, String> {
-    @Query("SELECT u.pass_word FROM User u WHERE u.userId = :userId")
+    @Query("SELECT u.passWord FROM User u WHERE u.userId = :userId")
     String findPassWordByUserId(@Param("userId") String userId);
-    Optional<User> findByUserId(Long userId);
+
+    Optional<User> findByUserPk(Long userId);
 
     @Modifying
     @Query("UPDATE User u SET u.point = :point WHERE u.id = :userId")
