@@ -16,7 +16,7 @@ import com.java.backend.domain.promotion.entity.Event;
 import com.java.backend.domain.promotion.entity.UserEvent;
 import com.java.backend.domain.promotion.repository.UserEventRepoService;
 import com.java.backend.domain.promotion.repository.UserEventRepository;
-import com.java.backend.domain.user.entity.User;
+import com.java.backend.domain.member.user.entity.User;
 
 @ExtendWith(MockitoExtension.class)
 public class UserEventRepoTest {

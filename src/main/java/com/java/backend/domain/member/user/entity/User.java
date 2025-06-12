@@ -1,4 +1,4 @@
-package com.java.backend.domain.user.entity;
+package com.java.backend.domain.member.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;

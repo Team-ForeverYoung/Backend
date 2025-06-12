@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import com.java.backend.domain.promotion.entity.Coupon;
 import com.java.backend.domain.promotion.entity.Event;
 import com.java.backend.domain.promotion.entity.UserEvent;
-import com.java.backend.domain.user.entity.User;
+import com.java.backend.domain.member.user.entity.User;
 
 public class UserEventEntityTest {
 	@Test

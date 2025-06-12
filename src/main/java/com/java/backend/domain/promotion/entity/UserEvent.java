@@ -1,6 +1,6 @@
 package com.java.backend.domain.promotion.entity;
 
-import com.java.backend.domain.user.entity.User;
+import com.java.backend.domain.member.user.entity.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

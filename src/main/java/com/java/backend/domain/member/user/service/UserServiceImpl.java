@@ -1,10 +1,10 @@
-package com.java.backend.domain.user.service;
+package com.java.backend.domain.member.user.service;
 
 import org.springframework.stereotype.Service;
 
-import com.java.backend.domain.user.dto.UserRegisterRequestDto;
-import com.java.backend.domain.user.entity.User;
-import com.java.backend.domain.user.repository.OliveUserRepository;
+import com.java.backend.domain.member.user.dto.UserRegisterRequestDto;
+import com.java.backend.domain.member.user.entity.User;
+import com.java.backend.domain.member.user.repository.OliveUserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
