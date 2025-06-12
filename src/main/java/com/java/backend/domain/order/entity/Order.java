@@ -1,6 +1,6 @@
 package com.java.backend.domain.order.entity;
 
-import com.java.backend.domain.user.entity.User;
+import com.java.backend.domain.member.user.entity.User;
 import com.java.backend.global.entity.BaseEntity;
 
 import jakarta.persistence.Column;

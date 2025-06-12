@@ -2,9 +2,8 @@ package com.java.backend.domain.promotion.dto;
 
 import com.java.backend.domain.promotion.entity.Event;
 import com.java.backend.domain.promotion.entity.UserEvent;
-import com.java.backend.domain.user.entity.User;
+import com.java.backend.domain.member.user.entity.User;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

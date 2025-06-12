@@ -7,12 +7,11 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.backend.domain.promotion.dto.EventJoinMessage;
-import com.java.backend.domain.promotion.dto.EventJoinRequestDto;
 import com.java.backend.domain.promotion.dto.EventResultMessage;
 import com.java.backend.domain.promotion.entity.Event;
 import com.java.backend.domain.promotion.entity.UserEvent;
-import com.java.backend.domain.promotion.message.KafkaTopic;
-import com.java.backend.domain.user.entity.User;
+import com.java.backend.global.kafka.KafkaTopic;
+import com.java.backend.domain.member.user.entity.User;
 import com.java.backend.global.kafka.OutBoxStatus;
 import com.java.backend.global.kafka.OutboxEvent;
 @Component

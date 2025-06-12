@@ -1,11 +1,5 @@
 package com.java.backend.domain.promotion.dto;
 
-import com.java.backend.domain.promotion.entity.Coupon;
-import com.java.backend.domain.promotion.entity.Event;
-import com.java.backend.domain.user.entity.User;
-
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
