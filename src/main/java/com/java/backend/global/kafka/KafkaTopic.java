@@ -1,4 +1,4 @@
-package com.java.backend.domain.promotion.message;
+package com.java.backend.global.kafka;
 
 import lombok.Getter;
 
@@ -6,7 +6,9 @@ import lombok.Getter;
 public enum KafkaTopic {
 
 	PROMOTION_EVENT("promotion_event"),
-	PROMOTION_RESULT("promotion_result");
+	PROMOTION_RESULT("promotion_result"),
+	USER_POINT("user_point");
+
 
 	private final String topic;
 

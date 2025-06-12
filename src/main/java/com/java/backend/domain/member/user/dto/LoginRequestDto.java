@@ -1,4 +1,4 @@
-package com.java.backend.domain.user.dto;
+package com.java.backend.domain.member.user.dto;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.java.backend.domain.point.entity;
+package com.java.backend.domain.member.point.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
