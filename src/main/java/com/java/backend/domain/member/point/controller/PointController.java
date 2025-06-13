@@ -5,6 +5,9 @@ import com.java.backend.domain.member.point.dto.SavePointReqDto;
 import com.java.backend.domain.member.point.entity.point_OrderItem;
 import com.java.backend.domain.member.point.service.PointService;
 import lombok.RequiredArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,10 +18,11 @@ import java.util.List;
 public class PointController {
 
     private final PointService service;
-
+    private static final Logger log = LoggerFactory.getLogger(PointController.class);
     // 미국 리전 (SQS → Lambda → Aurora)
     @PostMapping
     public void saveOrder(@RequestBody SavePointReqDto dto) throws JsonProcessingException {
+        log.warn(dto.toString());
         service.requestUpdateUserPoint(dto);
     }
 
