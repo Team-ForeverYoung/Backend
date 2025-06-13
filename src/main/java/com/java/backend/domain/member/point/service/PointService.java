@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class PointService {
 
@@ -30,7 +32,7 @@ public class PointService {
         this.outboxRepoService = outboxRepoService;
         this.oliveUserRepository = oliveUserRepository;
     }
-
+    @Transactional
     public void requestUpdateUserPoint(SavePointReqDto dto) throws JsonProcessingException {
         log.info("[PointService] 포인트 적립 요청 시작 - userId={}, price={}", dto.getUserId(), dto.getPrice());
 
@@ -52,7 +54,7 @@ public class PointService {
         log.info("[PointService] Outbox 저장 완료 - topic={}, userId={}, point={}",
             KafkaTopic.USER_POINT.getTopic(), dto.getUserId(), point);
     }
-
+    @Transactional
     public void updateUserPoint(UpdatePointReqMessage message) {
         log.info("[PointService] 사용자 포인트 업데이트 시작 - userId={}, point={}",
             message.getUserId(), message.getPoint());
