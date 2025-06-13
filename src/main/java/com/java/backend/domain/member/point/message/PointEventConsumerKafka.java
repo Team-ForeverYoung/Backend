@@ -3,13 +3,14 @@ package com.java.backend.domain.member.point.message;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.backend.domain.member.point.dto.UpdatePointReqMessage;
 import com.java.backend.domain.member.point.service.PointService;
 import com.java.backend.domain.promotion.dto.OutboxBase;
-
+@Component
 public class PointEventConsumerKafka {
 
 	private static final Logger log = LoggerFactory.getLogger(PointEventConsumerKafka.class);
