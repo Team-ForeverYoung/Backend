@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.backend.domain.member.point.dto.SavePointReqDto;
 import com.java.backend.domain.member.point.dto.UpdatePointReqMessage;
+import com.java.backend.domain.member.point.dto.UserPoint;
+import com.java.backend.domain.member.user.entity.User;
 import com.java.backend.domain.member.user.repository.OliveUserRepository;
 import com.java.backend.global.kafka.KafkaTopic;
 import com.java.backend.global.kafka.OutBoxStatus;
@@ -62,6 +64,12 @@ public class PointService {
         oliveUserRepository.updateUserPoint(message.getUserId(), message.getPoint());
 
         log.info("[PointService] 사용자 포인트 업데이트 완료");
+    }
+
+    public UserPoint viewUserPoint(Long userId){
+        Integer point = oliveUserRepository.getUserPointByPk(userId).orElseThrow();
+        UserPoint userPoint = new UserPoint(point);
+        return userPoint;
     }
 
     private Integer calculatePoint(Integer price) {

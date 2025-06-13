@@ -21,4 +21,7 @@ public interface OliveUserRepository extends JpaRepository<User, String> {
     @Query("UPDATE User u SET u.point = :point WHERE u.id = :userId")
     void updateUserPoint(@Param("userId") Long userId, @Param("point") Integer point);
 
+    @Query("SELECT u.point FROM User u WHERE u.id = :userId ")
+    Optional<Integer> getUserPointByPk(@Param("userId")Long userId);
+
 }

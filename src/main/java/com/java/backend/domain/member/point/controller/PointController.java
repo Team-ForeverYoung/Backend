@@ -2,6 +2,7 @@ package com.java.backend.domain.member.point.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.java.backend.domain.member.point.dto.SavePointReqDto;
+import com.java.backend.domain.member.point.dto.UserPoint;
 import com.java.backend.domain.member.point.entity.point_OrderItem;
 import com.java.backend.domain.member.point.service.PointService;
 import com.java.backend.domain.promotion.code.PromotionCode;
@@ -22,14 +23,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PointController {
 
-    private final PointService service;
+    private final PointService pointService;
     private static final Logger log = LoggerFactory.getLogger(PointController.class);
     // 미국 리전 (SQS → Lambda → Aurora)
     @PostMapping
     public ResponseEntity<ResponseApiCode> saveOrder(@RequestBody SavePointReqDto dto) throws JsonProcessingException {
         log.warn(dto.toString());
-        service.requestUpdateUserPoint(dto);
+        pointService.requestUpdateUserPoint(dto);
         RestApiResponse restApiResponse = new RestApiResponse(PromotionCode.USER_EVENT_CREATED_SUCCESS);
+        return ResponseEntity.ok(restApiResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponseApiCode> viewPoint(@RequestParam("userId") Long userId){
+        UserPoint userPoint = pointService.viewUserPoint(userId);
+        RestApiResponse restApiResponse = new RestApiResponse(PromotionCode.USER_EVENT_CREATED_SUCCESS,userPoint);
         return ResponseEntity.ok(restApiResponse);
     }
 
