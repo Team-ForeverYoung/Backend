@@ -34,8 +34,8 @@ public class PointController {
         return ResponseEntity.ok(restApiResponse);
     }
 
-    @GetMapping
-    public ResponseEntity<ResponseApiCode> viewPoint(@RequestParam("userId") Long userId){
+    @GetMapping("/{userId}")
+    public ResponseEntity<ResponseApiCode> viewPoint(@PathVariable("userId") Long userId){
         UserPoint userPoint = pointService.viewUserPoint(userId);
         RestApiResponse restApiResponse = new RestApiResponse(PromotionCode.USER_EVENT_CREATED_SUCCESS,userPoint);
         return ResponseEntity.ok(restApiResponse);
