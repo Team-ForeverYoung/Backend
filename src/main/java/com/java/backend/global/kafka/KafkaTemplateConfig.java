@@ -67,7 +67,7 @@ public class KafkaTemplateConfig {
 	public ConsumerFactory<String, String> outboxMessageConsumerFactory(){
 		Map<String,Object> config = new HashMap<>();
 		config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
-		config.put(ConsumerConfig.GROUP_ID_CONFIG, "summer-event-group");
+		config.put(ConsumerConfig.GROUP_ID_CONFIG, "main_server");
 		config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringDeserializer.class);
 		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringDeserializer.class);
 		return new DefaultKafkaConsumerFactory<>(config);
