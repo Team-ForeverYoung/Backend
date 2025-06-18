@@ -28,7 +28,6 @@ public class PointController {
     // 미국 리전 (SQS → Lambda → Aurora)
     @PostMapping
     public ResponseEntity<ResponseApiCode> saveOrder(@RequestBody SavePointReqDto dto) throws JsonProcessingException {
-        log.warn(dto.toString());
         pointService.requestUpdateUserPoint(dto);
         RestApiResponse restApiResponse = new RestApiResponse(PromotionCode.USER_EVENT_CREATED_SUCCESS);
         return ResponseEntity.ok(restApiResponse);

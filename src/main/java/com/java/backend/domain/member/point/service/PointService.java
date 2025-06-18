@@ -11,6 +11,8 @@ import com.java.backend.global.kafka.KafkaTopic;
 import com.java.backend.global.kafka.OutBoxStatus;
 import com.java.backend.global.kafka.OutboxEvent;
 import com.java.backend.global.kafka.OutboxRepoService;
+import com.java.backend.global.redis.RedisMessagePublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,15 +29,21 @@ public class PointService {
     private final ObjectMapper objectMapper;
     private final OutboxRepoService outboxRepoService;
     private final OliveUserRepository oliveUserRepository;
+    private final RedisMessagePublisher redisMessagePublisher;
 
     public PointService(ObjectMapper objectMapper, OutboxRepoService outboxRepoService,
-        OliveUserRepository oliveUserRepository) {
+        OliveUserRepository oliveUserRepository, RedisMessagePublisher redisMessagePublisher) {
         this.objectMapper = objectMapper;
         this.outboxRepoService = outboxRepoService;
         this.oliveUserRepository = oliveUserRepository;
+		this.redisMessagePublisher = redisMessagePublisher;
+	}
+    public void requestUpdateUserPoint(SavePointReqDto dto){
+        redisMessagePublisher.enqueueSavePoint(dto);
     }
+
     @Transactional
-    public void requestUpdateUserPoint(SavePointReqDto dto) throws JsonProcessingException {
+    public void requestUpdateUserPointToOutbox(SavePointReqDto dto) throws JsonProcessingException {
         log.info("[PointService] 포인트 적립 요청 시작 - userId={}, price={}", dto.getUserId(), dto.getPrice());
 
         Integer point = calculatePoint(dto.getPrice());
