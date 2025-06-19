@@ -24,7 +24,7 @@ public class RedisOutboxWorker implements CommandLineRunner {
 	private final PointService pointService;
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	private final ExecutorService executorService = Executors.newFixedThreadPool(16);
+	private final ExecutorService executorService = Executors.newFixedThreadPool(32);
 
 	private static final String MAIN_QUEUE = "queue:outbox:point";
 	private static final String BACKUP_QUEUE = "queue:outbox:processing";
